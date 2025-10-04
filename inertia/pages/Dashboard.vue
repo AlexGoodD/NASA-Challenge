@@ -22,46 +22,29 @@ const week = [
 
 <template>
   <div class="dashboard">
-    <header class="header">
-      <!--      <h1>Dhaka, Bangladesh</h1>-->
-      <!--      <input type="text" placeholder="Search City" class="search" />-->
-    </header>
+    <header class="header"></header>
 
-    <div class="content">
-      <div class="left">
-        <!--        <MapSelector />-->
-
-        <div class="flex justify-between gap-10">
-          <WeatherCard class="w-full" />
-
-          <div class="flex gap-4 w-full">
-            <ProbabilityChart />
-          </div>
-        </div>
-
-        <div class="overview">
-          <Card title="Wind Status">
-            <TrendGraph />
-          </Card>
-          <Card title="UV Index">
-            <UvIndex />
-          </Card>
-          <Card title="Humidity">
-            <Humidity />
-          </Card>
-          <Card title="Visibility">
-            <Visibility />
-          </Card>
-        </div>
+    <div class="grid grid-cols-4 gap-4">
+      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
+        <WeatherCard class="col-span-2" />
+        <ProbabilityChart />
+        <Card title="Wind Status">
+          <TrendGraph />
+        </Card>
+        <Card title="UV Index">
+          <UvIndex />
+        </Card>
+        <MapSelector place-name="New York, USA" class="row-span-2 max-h-max" />
+        <Card title="Humidity">
+          <Humidity />
+        </Card>
+        <Card title="Visibility">
+          <Visibility />
+        </Card>
       </div>
 
-      <!-- Columna derecha -->
       <div class="right">
-        <!--        <SummaryPanel />-->
-
-        <Card title="Agent" :no-background="true">
-          <!--          <CityList />-->
-        </Card>
+        <Card />
       </div>
     </div>
   </div>
@@ -73,44 +56,5 @@ const week = [
   color: white;
   min-height: 100vh;
   padding: 1rem;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.search {
-  background: #1f2937;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  color: white;
-}
-.content {
-  display: flex;
-  margin-top: 1rem;
-  gap: 1rem;
-}
-.left {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.days {
-  display: flex;
-  gap: 0.5rem;
-}
-.overview {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  align-items: stretch; /* asegura que las celdas se estiren */
 }
 </style>

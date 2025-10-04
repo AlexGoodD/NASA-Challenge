@@ -7,7 +7,7 @@ const encodedPlaceName = encodeURIComponent(props.placeName)
 </script>
 
 <template>
-  <div id="map" class="w-full h-full rounded-2xl overflow-hidden">
+  <div id="map" class="w-full h-full rounded-xl overflow-hidden">
     <iframe
       width="100%"
       height="100%"
@@ -15,7 +15,7 @@ const encodedPlaceName = encodeURIComponent(props.placeName)
       loading="lazy"
       allowfullscreen
       referrerpolicy="no-referrer-when-downgrade"
-      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBgIvcFsv6SpFFUjdJBGkEjW0yItzgOsbk&q={{ encodedPlaceName }}"
+      :src="`https://www.google.com/maps/embed/v1/place?key=AIzaSyBgIvcFsv6SpFFUjdJBGkEjW0yItzgOsbk&q=${encodedPlaceName}`"
     >
     </iframe>
   </div>

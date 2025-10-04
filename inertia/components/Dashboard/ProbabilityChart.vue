@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { Chart } from 'chart.js/auto'
+import Card from '~/components/UI/Card.vue'
 
 onMounted(() => {
   const ctx = document.getElementById('rainChart')
@@ -56,7 +57,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <canvas id="rainChart"></canvas>
+  <Card>
+    <canvas id="rainChart"></canvas>
+  </Card>
 </template>
 
 <style scoped></style>
