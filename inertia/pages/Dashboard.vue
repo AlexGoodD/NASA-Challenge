@@ -35,21 +35,47 @@ const fetchWeatherData = async (lat: number, lon: number) => {
   }
 }
 
-const requestLocationPermission = () => {
+async function getIP() {
+  try {
+    const response = await axios.get('https://api.ipify.org?format=json')
+    return response.data.ip
+  } catch (error) {
+    console.error('Error fetching IP address:', error)
+    return null
+  }
+}
+
+async function getAproximateLocationByIP() {
+  try {
+    const ip = await getIP()
+    if (!ip) {
+      throw new Error('Could not retrieve IP address')
+    }
+    const response = await axios.get(`https://ipapi.co/${ip}/json/`)
+    const { latitude, longitude } = response.data
+    latitud.value = latitude
+    longitud.value = longitude
+    await fetchWeatherData(latitude, longitude)
+  } catch (error) {
+    console.error('Error fetching approximate location by IP:', error)
+  }
+}
+
+function requestLocationPermission() {
   if (!navigator.geolocation) {
     return
   }
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
+    async (position) => {
       latitud.value = position.coords.latitude
       longitud.value = position.coords.longitude
       locationPermissionGranted.value = true
-      fetchWeatherData(position.coords.latitude, position.coords.longitude)
+      await fetchWeatherData(position.coords.latitude, position.coords.longitude)
     },
-    (error: GeolocationPositionError) => {
+    async (error: GeolocationPositionError) => {
       locationPermissionGranted.value = false
-      //TODO: Poner ubicacion aproximada por IP
+      await getAproximateLocationByIP()
       console.error('Error getting location:', error)
     },
     {
