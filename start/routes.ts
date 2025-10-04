@@ -8,9 +8,11 @@
 */
 
 import router from '@adonisjs/core/services/router'
-router.on('/').renderInertia('home')
+
+const WeatherController = () => import('#controllers/WeatherController')
 
 // Ruta que recibe lat, lon, fecha y devuelve probabilidades de condiciones adversas
+router.get('/', [WeatherController, 'index'])
 
 // Ruta que devuelve datos históricos resumisdos (ej. últimos 20 años) para una latitud y longitud dadas
 
