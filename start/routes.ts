@@ -21,3 +21,6 @@ router.get('/', [WeatherController, 'index'])
 // Ruta que descarga en CSV/JSON los datos de la consulta
 
 // Ruta de prueba para saber si el backend esta funcionando
+
+// Ruta que trae datos al home 
+router.post('/retrieve-data', [WeatherController, 'search']).as('retrieve.data')
