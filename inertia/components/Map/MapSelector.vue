@@ -1,28 +1,22 @@
-<script setup>
-import L from 'leaflet'
-import { onMounted } from 'vue'
+<script setup lang="ts">
+const props = defineProps<{
+  placeName: string
+}>()
 
-onMounted(() => {
-  const map = L.map('map', { zoomControl: false }).setView([23.81, 90.41], 6)
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
-  }).addTo(map)
-
-  map.on('click', (e) => {
-    alert(`Selected: ${e.latlng.lat}, ${e.latlng.lng}`)
-  })
-})
+const encodedPlaceName = encodeURIComponent(props.placeName)
 </script>
 
 <template>
-  <div id="map"></div>
+  <div id="map" class="w-full h-full rounded-2xl overflow-hidden">
+    <iframe
+      width="100%"
+      height="100%"
+      style="border: 0"
+      loading="lazy"
+      allowfullscreen
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBgIvcFsv6SpFFUjdJBGkEjW0yItzgOsbk&q={{ encodedPlaceName }}"
+    >
+    </iframe>
+  </div>
 </template>
-
-<style scoped>
-#map {
-  height: 300px;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-}
-</style>
