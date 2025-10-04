@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import CityList from '~/components/Dashboard/CityList.vue'
 import Card from '~/components/UI/Card.vue'
-import SummaryPanel from '~/components/Dashboard/SummaryPanel.vue'
 import ProbabilityChart from '~/components/Dashboard/ProbabilityChart.vue'
 import TrendGraph from '~/components/Dashboard/TrendGraph.vue'
 import WeatherCard from '~/components/Dashboard/WeatherCard.vue'
@@ -34,7 +32,13 @@ const week = [
         <Card title="UV Index">
           <UvIndex />
         </Card>
-        <MapSelector place-name="New York, USA" class="row-span-2 max-h-max" />
+        <MapSelector place-name="New York, USA" class="row-span-3 max-h-max" />
+        <Card title="Humidity">
+          <Humidity />
+        </Card>
+        <Card title="Visibility">
+          <Visibility />
+        </Card>
         <Card title="Humidity">
           <Humidity />
         </Card>
