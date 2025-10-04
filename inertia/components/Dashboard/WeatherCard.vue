@@ -3,7 +3,7 @@ import Card from '~/components/UI/Card.vue'
 </script>
 
 <template>
-  <Card>
+  <Card class="bg-[#C3DBEE]">
     <div class="weather">
       <div>
         <h2>16°</h2>

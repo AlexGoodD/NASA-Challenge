@@ -7,6 +7,8 @@ import TrendGraph from '~/components/Dashboard/TrendGraph.vue'
 import WeatherCard from '~/components/Dashboard/WeatherCard.vue'
 import MapSelector from '~/components/Map/MapSelector.vue'
 import UvIndex from '~/components/Dashboard/UVIndex.vue'
+import Humidity from '~/components/Dashboard/Humidity.vue'
+import Visibility from '~/components/Dashboard/Visibility.vue'
 
 const week = [
   { day: 'Sat', temp: 10, icon: '/icons/cloudy.png' },
@@ -49,10 +51,10 @@ const week = [
             <UvIndex />
           </Card>
           <Card title="Humidity">
-            <p>84%</p>
+            <Humidity />
           </Card>
           <Card title="Visibility">
-            <p>0.4 km</p>
+            <Visibility />
           </Card>
         </div>
       </div>
