@@ -35,11 +35,7 @@ const week = [
           <WeatherCard class="w-full" />
 
           <div class="flex gap-4 w-full">
-            <Card v-for="(d, i) in week" :key="i">
-              <h3>{{ d.day }}</h3>
-              <p>{{ d.temp }}°</p>
-              <img :src="d.icon" />
-            </Card>
+            <ProbabilityChart />
           </div>
         </div>
 
@@ -61,14 +57,10 @@ const week = [
 
       <!-- Columna derecha -->
       <div class="right">
-        <Card title="Chance Of Rain" :no-background="true">
-          <ProbabilityChart />
-        </Card>
-
         <!--        <SummaryPanel />-->
 
-        <Card title="Other Cities" :no-background="true">
-          <CityList />
+        <Card title="Agent" :no-background="true">
+          <!--          <CityList />-->
         </Card>
       </div>
     </div>
