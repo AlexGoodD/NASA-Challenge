@@ -4,8 +4,8 @@ import env from '#start/env'
 
 const responseSchema = z.object({
   score: z.number().min(0).max(100),
-  justification: z.string().min(10).max(500),
-  recommendations: z.array(z.string().min(10).max(200)).min(1).max(5),
+  justification: z.string().min(10).max(300),
+  recommendations: z.array(z.string().min(10).max(100)).min(1).max(5),
 })
 
 export default class GeminiService {
@@ -18,14 +18,26 @@ export default class GeminiService {
     }).withStructuredOutput(responseSchema)
   }
 
-  private buildPrompt(weatherInfo: string, userPlan: string) {
+  private buildPrompt(
+    weatherInformation: string,
+    userPlan: string,
+    placeName: string,
+    dateString: string
+  ) {
     return `Eres un asistente experto en evaluar planes de viaje basados en la información meteorológica proporcionada.
-    La información meteorológica es la siguiente: ${weatherInfo}
+    Lugar del viaje: ${placeName}
+    Fecha del viaje: ${dateString}
+    La información meteorológica es la siguiente: ${weatherInformation}
     El plan de viaje del usuario es el siguiente: ${userPlan}`
   }
 
-  public async ask(weatherInfo: string, userPlan: string) {
-    const prompt = this.buildPrompt(weatherInfo, userPlan)
+  public async ask(
+    weatherInformation: string,
+    userPlan: string,
+    placeName: string,
+    dateString: string
+  ) {
+    const prompt = this.buildPrompt(weatherInformation, userPlan, placeName, dateString)
 
     return await this.model.invoke(prompt)
   }

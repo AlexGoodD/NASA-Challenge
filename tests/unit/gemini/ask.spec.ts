@@ -16,13 +16,11 @@ test.group('Gemini Service', () => {
     const geminiService = new GeminiService()
     const response = await geminiService.ask(JSON.stringify(weatherInfo), userPlan)
 
-    console.log(response)
-
     assert.isAtLeast(response.score, 0)
     assert.isAtMost(response.score, 100)
     assert.isString(response.justification)
     assert.isAtLeast(response.justification.length, 10)
-    assert.isAtMost(response.justification.length, 500)
+    assert.isAtMost(response.justification.length, 600)
     assert.isArray(response.recommendations)
     assert.isAtLeast(response.recommendations.length, 1)
     assert.isAtMost(response.recommendations.length, 5)

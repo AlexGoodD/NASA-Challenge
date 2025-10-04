@@ -70,6 +70,7 @@
     "@vueuse/core": "^13.9.0",
     "chart.js": "^4.5.0",
     "edge.js": "^6.2.1",
+    "gsap": "^3.13.0",
     "leaflet": "^1.9.4",
     "lodash-es": "^4.17.21",
     "lucide-vue-next": "^0.544.0",
@@ -77,9 +78,9 @@
     "openmeteo": "^1.2.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
+    "tailwindcss": "^4.1.14",
     "vue": "^3.5.22",
     "zod": "^3.25.76"
-    "tailwindcss": "^4.1.14"
   },
   "hotHook": {
     "boundaries": [

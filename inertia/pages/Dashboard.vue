@@ -10,6 +10,7 @@ import Visibility from '~/components/Dashboard/Visibility.vue'
 import AutocompletableSearch from '~/components/AutocompletableSearch.vue'
 import { ref, watch } from 'vue'
 import { PlacesApiResponse } from '../../services/GoogleMapsService'
+import AiPredictor from '~/components/AiPredictor.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 
@@ -44,7 +45,9 @@ watch(place, (_newPlace) => {
       </div>
 
       <div class="right">
-        <Card />
+        <Card>
+          <AiPredictor />
+        </Card>
       </div>
     </div>
   </div>

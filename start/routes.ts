@@ -16,14 +16,13 @@ const PlacesController = () => import('#controllers/PlacesController')
 router.get('/', [WeatherController, 'index'])
 
 router.get('/api/places', [PlacesController, 'autocomplete'])
+router.get('/api/weather/predict-viability', [WeatherController, 'predictViability'])
 
-// Ruta que devuelve datos históricos resumisdos (ej. últimos 20 años) para una latitud y longitud dadas
+// Ruta que devuelve datos históricos resumidos (ej. últimos 20 años) para una latitud y longitud dadas
 
-// Ruta que devuelve tendencias (ej "cada vez mas calor en julio en los últimos 20 años")
+// Ruta que devuelve tendencias (ej. "cada vez más calor en julio en los últimos 20 años")
 
 // Ruta que descarga en CSV/JSON los datos de la consulta
-
-// Ruta de prueba para saber si el backend esta funcionando
 
 // Ruta que trae datos al home
 router.post('/retrieve-data', [WeatherController, 'search']).as('retrieve.data')

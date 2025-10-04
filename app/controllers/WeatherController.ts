@@ -1,11 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { getWeatherValidator } from '#validators/weather'
+import { getWeatherValidator, predictWeatherViabilityValidator } from '#validators/weather'
 import { fetchWeatherApi } from 'openmeteo'
+import GeminiService from '../../services/GeminiService.js'
 
 export default class WeatherController {
   public async index({ inertia, request }: HttpContext) {
     const payload = request.validateUsing(getWeatherValidator)
     const weatherInformation = {}
+
+    console.log(payload, weatherInformation)
 
     return inertia.render('Dashboard')
   }
@@ -72,5 +75,15 @@ export default class WeatherController {
     }
 
     return weatherData
+  }
+
+  public async predictViability({ request }: HttpContext) {
+    const { weatherInformation, userPlan, date, placeName } = await request.validateUsing(
+      predictWeatherViabilityValidator
+    )
+
+    const geminiService = new GeminiService()
+
+    return await geminiService.ask(JSON.stringify(weatherInformation), userPlan, placeName, date)
   }
 }
