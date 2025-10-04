@@ -8,9 +8,14 @@
 */
 
 import router from '@adonisjs/core/services/router'
-router.on('/').renderInertia('home')
+
+const WeatherController = () => import('#controllers/WeatherController')
+const PlacesController = () => import('#controllers/PlacesController')
 
 // Ruta que recibe lat, lon, fecha y devuelve probabilidades de condiciones adversas
+router.get('/', [WeatherController, 'index'])
+
+router.get('/api/places', [PlacesController, 'autocomplete'])
 
 // Ruta que devuelve datos históricos resumisdos (ej. últimos 20 años) para una latitud y longitud dadas
 
@@ -19,3 +24,6 @@ router.on('/').renderInertia('home')
 // Ruta que descarga en CSV/JSON los datos de la consulta
 
 // Ruta de prueba para saber si el backend esta funcionando
+
+// Ruta que trae datos al home
+router.post('/retrieve-data', [WeatherController, 'search']).as('retrieve.data')

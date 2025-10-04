@@ -1,5 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+defineProps<{
+  title?: string
+  noBackground?: boolean
+  square?: boolean
+}>()
+</script>
 
-<template></template>
-
-<style scoped></style>
+<template>
+  <div
+    :class="[
+      'flex flex-col h-full rounded-xl p-4 text-white',
+      noBackground ? 'bg-transparent' : 'bg-[#1b1a1d]',
+      square && 'aspect-square h-auto',
+    ]"
+  >
+    <header v-if="title" class="mb-2 text-lg font-thin">
+      {{ title }}
+    </header>
+    <div class="flex-1">
+      <slot />
+    </div>
+  </div>
+</template>

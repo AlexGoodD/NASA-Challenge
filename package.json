@@ -65,13 +65,21 @@
     "@langchain/core": "^0.3.78",
     "@langchain/google-genai": "^0.2.18",
     "@langchain/langgraph": "^0.4.9",
+    "@tailwindcss/vite": "^4.1.14",
     "@vinejs/vine": "^3.0.1",
+    "@vueuse/core": "^13.9.0",
+    "chart.js": "^4.5.0",
     "edge.js": "^6.2.1",
+    "leaflet": "^1.9.4",
+    "lodash-es": "^4.17.21",
+    "lucide-vue-next": "^0.544.0",
     "luxon": "^3.7.2",
+    "openmeteo": "^1.2.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "vue": "^3.5.22",
     "zod": "^3.25.76"
+    "tailwindcss": "^4.1.14"
   },
   "hotHook": {
     "boundaries": [
