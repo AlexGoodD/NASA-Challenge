@@ -1,8 +1,12 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import { getWeatherValidator } from '#validators/weather'
 import { fetchWeatherApi } from 'openmeteo'
 
-export default class WeathersController {
-  public async index({ inertia }: HttpContext) {
+export default class WeatherController {
+  public async index({ inertia, request }: HttpContext) {
+    const payload = request.validateUsing(getWeatherValidator)
+    const weatherInformation = {}
+
     return inertia.render('Dashboard')
   }
 

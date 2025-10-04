@@ -7,20 +7,22 @@ import MapSelector from '~/components/Map/MapSelector.vue'
 import UvIndex from '~/components/Dashboard/UVIndex.vue'
 import Humidity from '~/components/Dashboard/Humidity.vue'
 import Visibility from '~/components/Dashboard/Visibility.vue'
+import AutocompletableSearch from '~/components/AutocompletableSearch.vue'
+import { ref, watch } from 'vue'
+import { PlacesApiResponse } from '../../services/GoogleMapsService'
 
-const week = [
-  { day: 'Sat', temp: 10, icon: '/icons/cloudy.png' },
-  { day: 'Sun', temp: 15, icon: '/icons/rain.png' },
-  { day: 'Mon', temp: 11, icon: '/icons/snow.png' },
-  { day: 'Tue', temp: 10, icon: '/icons/rain.png' },
-  { day: 'Wed', temp: 12, icon: '/icons/thunder.png' },
-  { day: 'Thu', temp: 10, icon: '/icons/sun.png' },
-]
+const place = ref<PlacesApiResponse['places'][number]>()
+
+watch(place, (_newPlace) => {
+  // Handle place change logic here
+})
 </script>
 
 <template>
   <div class="dashboard">
-    <header class="header"></header>
+    <header class="mb-10 mt-5 flex justify-center">
+      <AutocompletableSearch v-model="place" />
+    </header>
 
     <div class="grid grid-cols-4 gap-4">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">

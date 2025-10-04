@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted } from 'vue'
 import { Chart } from 'chart.js/auto'
 import Card from '~/components/UI/Card.vue'
