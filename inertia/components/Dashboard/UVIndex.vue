@@ -6,7 +6,11 @@ const value = 5.5 // valor actual de UV
 const maxValue = 12 // máximo del índice UV
 
 onMounted(() => {
-  const ctx = document.getElementById('uvChart').getContext('2d')
+  const canvas = document.getElementById('uvChart') as HTMLCanvasElement | null
+  if (!canvas) return
+
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
 
   new Chart(ctx, {
     type: 'doughnut',
@@ -14,16 +18,16 @@ onMounted(() => {
       datasets: [
         {
           data: [value, maxValue - value],
-          backgroundColor: ['#3b82f6', '#1f2937'], // azul + gris oscuro
+          backgroundColor: ['#2BA3FC', '#D3EEFE'],
           borderWidth: 0,
-          cutout: '70%',
         },
       ],
     },
     options: {
       responsive: true,
-      rotation: -90, // empieza desde arriba
-      circumference: 180, // solo medio círculo
+      rotation: -90,
+      circumference: 180,
+      cutout: '85%',
       plugins: {
         legend: { display: false },
         tooltip: { enabled: false },
