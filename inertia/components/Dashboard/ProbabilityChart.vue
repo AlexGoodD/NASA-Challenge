@@ -58,7 +58,7 @@ onMounted(() => {
           ticks: {
             stepSize: 50,
             callback: (value) => {
-              if (value === 100) return 'Luvioso'
+              if (value === 100) return 'Lluvioso'
               if (value === 50) return 'Soleado'
               if (value === 0) return 'Fuerte'
               return ''

@@ -159,7 +159,10 @@ onMounted(() => {
           class="row-span-3 max-h-max"
         />
         <Card title="Humidity">
-          <Humidity :weather-data="weatherData" />
+          <Humidity
+            :hourly-data="weatherData?.hourly.relative_humidity_2m"
+            :dew-point="weatherData?.hourly.dew_point_2m?.[0]"
+          />
         </Card>
         <Card title="Visibility">
           <Visibility :weather-data="weatherData" />
