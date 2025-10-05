@@ -3,6 +3,12 @@ import axios from 'axios'
 import { ArrowUp, LoaderCircle } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
+import { Place } from '../../services/GoogleMapsService'
+import CalendarComponent from '~/components/CalendarComponent.vue'
+
+const props = defineProps<{
+  place: Place
+}>()
 
 const predictViabilityEndpoint = axios.create({
   baseURL: '/api/weather/predict-viability',
@@ -12,15 +18,7 @@ const predictViabilityEndpoint = axios.create({
 })
 
 const userPlan = ref('')
-const date = '2025-12-31'
-const placeName = 'Parque Fundidora'
-const weatherInformation = {
-  temperature: 22,
-  humidity: 60,
-  windSpeed: 10,
-  uvIndex: 5,
-  visibility: 10,
-}
+const date = ref(new Date().toISOString().split('T')[0])
 
 type ResponseData = {
   score: number
@@ -84,16 +82,15 @@ async function sendPredictionRequest() {
     userPlan.value = ''
     const response = await predictViabilityEndpoint.get('', {
       params: {
-        weatherInformation: weatherInformation,
+        lat: props.place.location.latitude,
+        lon: props.place.location.longitude,
         userPlan: planToSend,
-        date: date,
-        placeName: placeName,
+        date: date.value,
+        placeName: props.place.displayName.text,
       },
     })
 
     prediction.value = response.data as ResponseData
-
-    console.log('Predicción recibida:', prediction.value)
   } catch (error) {
     console.error('Error al enviar la solicitud de predicción:', error)
   } finally {
@@ -186,6 +183,7 @@ function onLeave(el: any, done: any) {
       >
         <ArrowUp :size="24" />
       </button>
+      <CalendarComponent v-model="date" />
       <textarea
         class="py-2 px-3 bg-neutral-700 rounded-xl resize-none placeholder:text-neutral-400 focus:outline-none"
         rows="3"

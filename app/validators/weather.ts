@@ -11,8 +11,7 @@ export const predictWeatherViabilityValidator = vine.compile(
     placeName: vine.string().trim(),
     date: vine.string().trim(),
     userPlan: vine.string().trim(),
-    weatherInformation: vine.record(
-      vine.unionOfTypes([vine.string(), vine.number(), vine.boolean()])
-    ),
+    lat: vine.number(),
+    lon: vine.number()
   })
 )
