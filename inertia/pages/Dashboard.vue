@@ -101,7 +101,11 @@ onMounted(() => {
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
         <WeatherCard class="col-span-2" :weather="weatherData" />
-        <ProbabilityChart :weather-data="weatherData" />
+        <ProbabilityChart
+          v-if="weatherData?.hourly.precipitation_probability"
+          :hourly-data="weatherData.hourly.precipitation_probability"
+        />
+        <Card v-else />
         <Card title="Wind Status">
           <TrendGraph :weather-data="weatherData" />
         </Card>

@@ -1,25 +1,45 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 import Card from '~/components/UI/Card.vue'
 
+interface Props {
+  hourlyData: Record<number, number>
+}
+
+const props = defineProps<Props>()
+
+function generateHourlyLabels() {
+  const labels = []
+  for (let i = 0; i < 24; i++) {
+    const hour = i === 0 ? 12 : i > 12 ? i - 12 : i
+    const period = i < 12 ? 'AM' : 'PM'
+    labels.push(`${hour}${period}`)
+  }
+  return labels
+}
+
+const chartData = computed(() => {
+  const data = []
+  for (let i = 0; i < 24; i++) {
+    data.push(props.hourlyData[i] || 0)
+  }
+  return data
+})
 onMounted(() => {
   const ctx = document.getElementById('rainChart')
+  if (!ctx) return
 
-  new Chart(ctx, {
+  const labels = generateHourlyLabels()
+  const data = chartData.value
+
+  new Chart(ctx as HTMLCanvasElement, {
     data: {
-      labels: ['10AM', '11AM', '12PM', '1PM', '2PM', '3PM'],
+      labels,
       datasets: [
         {
-          type: 'bar',
-          data: [30, 40, 70, 50, 80, 20],
-          backgroundColor: 'rgb(233,241,255)',
-          borderRadius: 5,
-          barThickness: 4,
-        },
-        {
           type: 'line',
-          data: [30, 40, 70, 50, 80, 20],
+          data,
           borderColor: '#658ab5',
           backgroundColor: '#60a5fa',
           fill: false,
@@ -31,7 +51,15 @@ onMounted(() => {
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: false } },
+      maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: 'index',
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: false },
+      },
       scales: {
         y: {
           min: 0,
@@ -39,9 +67,9 @@ onMounted(() => {
           ticks: {
             stepSize: 50,
             callback: (value) => {
-              if (value === 100) return 'Rainy'
-              if (value === 50) return 'Sunny'
-              if (value === 0) return 'Heavy'
+              if (value === 100) return 'Luvioso'
+              if (value === 50) return 'Soleado'
+              if (value === 0) return 'Fuerte'
               return ''
             },
           },
@@ -49,6 +77,15 @@ onMounted(() => {
         },
         x: {
           grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: {
+            maxRotation: 0,
+            minRotation: 0,
+            callback: function (_value, index) {
+              const hourLabel = labels[index]
+              const probability = data[index]
+              return [hourLabel, `${probability}%`]
+            },
+          },
         },
       },
     },
@@ -57,8 +94,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <Card>
-    <canvas id="rainChart"></canvas>
+  <Card title="Probabilidad de lluvia">
+    <div class="overflow-x-hidden">
+      <div class="overflow-x-auto">
+        <div class="min-w-[1000px]">
+          <canvas id="rainChart"></canvas>
+        </div>
+      </div>
+    </div>
   </Card>
 </template>
 
