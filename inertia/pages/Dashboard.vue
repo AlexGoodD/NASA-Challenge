@@ -119,7 +119,7 @@ onMounted(() => {
 <template>
   <div class="dashboard">
     <header class="mb-10 mt-5 flex items-center justify-between">
-      <div class="flex gap-2">
+      <div class="flex gap-2 items-center">
         <MapPin :size="20" />
         <!--Ciudad/Pais-->
         <p>{{ city }}, {{ country }}</p>
