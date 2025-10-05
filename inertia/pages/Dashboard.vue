@@ -118,7 +118,7 @@ onMounted(() => {
         <Card title="UV Index">
           <UvIndex :weather-data="weatherData" />
         </Card>
-        <NasaMap class="row-span-3 max-h-max" />
+        <NasaMap class="row-span-5" :lat="latitud" :lon="longitud" />
         <Card title="Humidity">
           <Humidity :weather-data="weatherData" />
         </Card>
