@@ -76,5 +76,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="mapContainer"></div>
+  <div ref="mapContainer" v-bind="$attrs"></div>
 </template>
