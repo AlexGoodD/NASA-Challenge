@@ -23,7 +23,7 @@ const weatherData = ref<WeatherData>()
 const locationPermissionGranted = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
 
-const city = ref<string>('Cargando...')
+const city = ref<string>('')
 const country = ref<string>('')
 
 const fetchWeatherData = async (lat: number, lon: number) => {
@@ -146,15 +146,24 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
 
 <template>
   <div class="dashboard">
-    <header class="mb-10 mt-5 flex items-center justify-between">
-      <div class="flex gap-2 items-center ml-4">
-        <MapPin :size="16" />
-        <p>{{ city }}, {{ country }}</p>
-      </div>
-      <div class="flex gap-4">
-        <AutocompletableSearch v-model="place" />
-      </div>
+    <header class="mb-10 mt-5 flex items-center justify-center">
+      <AutocompletableSearch v-model="place" :initial-value="`${city}, ${country}`" :key="city" />
     </header>
+    <div class="grid grid-cols-4 gap-4 w-full :" v-if="isLoading">
+      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70 *:min-h-46">
+        <Card class="col-span-2 h-72 animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+        <Card class="row-span-3 h-full animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+        <Card class="h-72 animate-pulse bg-neutral-900" />
+      </div>
+      <div class="right">
+        <Card class="max-h-[82dvh] sticky top-3 h-full animate-pulse bg-neutral-900" />
+      </div>
+    </div>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
         <WeatherCard class="col-span-2" :weather="weatherData" />

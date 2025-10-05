@@ -98,21 +98,21 @@ function selectDate(day: number) {
   <div class="relative">
     <label
       for="when"
-      class="bg-neutral-700 py-2 px-4 grid grid-cols-[1fr_6fr] rounded-lg gap-4 mb-2 mx-1.5"
+      class="bg-neutral-700 py-2 px-3 grid grid-cols-[1fr_6fr] rounded-lg gap-4 mb-2 mx-1.5"
     >
       <input
         ref="input"
         type="text"
         name="when"
-        :value="format(selectedDate, 'PPP', { locale: es })"
+        :value="`para el ${format(selectedDate, 'PPP', { locale: es })}`"
         readonly
-        class="bg-transparent outline-none cursor-pointer"
+        class="bg-transparent outline-none cursor-pointer text-sm"
       />
     </label>
     <Transition>
       <div
         ref="dropdown"
-        class="absolute bottom-14 inset-x-1.5 rounded-[1.7rem] bg-neutral-700 shadow-xl shadow-stone-900/5 z-50 grid p-3 gap-2 text-sm"
+        class="absolute bottom-13 inset-x-1.5 rounded-[1.7rem] bg-neutral-700 shadow-xl shadow-stone-900/5 z-50 grid p-3 gap-2 text-sm"
         v-if="isActive"
       >
         <div id="calendar" class="grid grid-cols-[1fr_1fr_1fr_1fr_1fr_1fr_1fr] gap-2">
