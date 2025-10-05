@@ -22,6 +22,8 @@ export default class WeatherController {
         'temperature_2m_min',
         'precipitation_probability_max',
         'wind_speed_10m_max',
+        'uv_index_max',
+        'uv_index_clear_sky_max',
       ],
       hourly: [
         'temperature_2m',
@@ -68,6 +70,8 @@ export default class WeatherController {
         temperature_2m_min: daily.variables(2)!.valuesArray(),
         precipitation_probability_max: daily.variables(3)!.valuesArray(),
         wind_speed_10m_max: daily.variables(4)!.valuesArray(),
+        uv_index_max: daily.variables(5)!.valuesArray(),
+        uv_index_clear_sky_max: daily.variables(6)!.valuesArray(),
       },
     }
 

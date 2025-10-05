@@ -122,8 +122,14 @@ onMounted(() => {
             :hourly-data="weatherData.hourly.wind_speed_10m"
           />
         </Card>
-        <Card title="UV Index">
-          <UvIndex :weather-data="weatherData" />
+        <Card title="UV Index" class="min-h-[221px]">
+          <UvIndex
+            v-if="weatherData?.daily.uv_index_clear_sky_max && weatherData?.daily.uv_index_max"
+            :daily-data="{
+              uv_index_max: weatherData.daily.uv_index_max,
+              uv_index_clear_sky_max: weatherData.daily.uv_index_clear_sky_max,
+            }"
+          />
         </Card>
         <MapSelector
           :place-name="place?.displayName?.text || 'Ubicación actual'"
