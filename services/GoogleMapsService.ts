@@ -29,7 +29,7 @@ export class GoogleMapsService {
   static async searchLocation(query: string): Promise<PlacesApiResponse['places']> {
     const res = await placesApiClient
       .post('/places:searchText', {
-        pageSize: 8,
+        pageSize: 4,
         textQuery: query,
         languageCode: 'es',
       })

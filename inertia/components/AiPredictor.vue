@@ -176,9 +176,6 @@ function onLeave(el: any, done: any) {
     </div>
 
     <div class="flex flex-col relative z-10 -mx-4 -mb-4">
-      <span
-        class="absolute bg-gradient-to-t from-red-500 to-blue-500 inset-x-0 -top-4 h-4 z-100"
-      ></span>
       <button
         class="mb-2 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold p-1 rounded-md transition-colors w-fit self-end disabled:opacity-0 disabled:cursor-not-allowed absolute -top-10 right-3"
         @click="sendPredictionRequest"

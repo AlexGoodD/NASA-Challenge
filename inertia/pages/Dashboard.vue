@@ -14,11 +14,12 @@ import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
 import AiPredictor from '~/components/AiPredictor.vue'
+import { WeatherData } from '#controllers/WeatherController'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
 const longitud = ref<number | null>(null)
-const weatherData = ref<any>(null)
+const weatherData = ref<WeatherData>()
 const locationPermissionGranted = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
 
@@ -29,7 +30,7 @@ const fetchWeatherData = async (lat: number, lon: number) => {
       latitude: lat,
       longitude: lon,
     })
-    weatherData.value = response.data
+    weatherData.value = response.data as WeatherData
     console.log('Weather data received:', response.data)
   } catch (error) {
     console.error('Error fetching weather data:', error)
@@ -38,30 +39,18 @@ const fetchWeatherData = async (lat: number, lon: number) => {
   }
 }
 
-async function getIP() {
-  try {
-    const response = await axios.get('https://api.ipify.org?format=json')
-    return response.data.ip
-  } catch (error) {
-    console.error('Error fetching IP address:', error)
-    return null
-  }
-}
+async function getApproximateLocation() {
+  const ipResponse = await axios.get('https://api.ipify.org?format=json')
+  const ip = ipResponse.data.ip
 
-async function getAproximateLocationByIP() {
-  try {
-    const ip = await getIP()
-    if (!ip) {
-      throw new Error('Could not retrieve IP address')
-    }
-    const response = await axios.get(`https://ipapi.co/${ip}/json/`)
-    const { latitude, longitude } = response.data
-    latitud.value = latitude
-    longitud.value = longitude
-    await fetchWeatherData(latitude, longitude)
-  } catch (error) {
-    console.error('Error fetching approximate location by IP:', error)
-  }
+  // Using ipinfo.io instead of ip-api.com
+  // Note: For production, you should sign up for a free API token.
+  const geoResponse = await axios.get(`https://ipinfo.io/${ip}/json`)
+
+  // ipinfo.io returns location in a "loc" string like "lat,lon"
+  const [latitude, longitude] = geoResponse.data.loc.split(',').map(Number)
+
+  await fetchWeatherData(latitude, longitude)
 }
 
 function requestLocationPermission() {
@@ -78,7 +67,7 @@ function requestLocationPermission() {
     },
     async (error: GeolocationPositionError) => {
       locationPermissionGranted.value = false
-      await getAproximateLocationByIP()
+      await getApproximateLocation()
       console.error('Error getting location:', error)
     },
     {
@@ -109,9 +98,9 @@ onMounted(() => {
     <header class="mb-10 mt-5 flex justify-center">
       <AutocompletableSearch v-model="place" />
     </header>
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
-        <WeatherCard class="col-span-2" :weather-data="weatherData" />
+        <WeatherCard class="col-span-2" :weather="weatherData" />
         <ProbabilityChart :weather-data="weatherData" />
         <Card title="Wind Status">
           <TrendGraph :weather-data="weatherData" />
@@ -140,7 +129,7 @@ onMounted(() => {
       </div>
 
       <div class="right">
-        <Card>
+        <Card class="max-h-[80dvh]">
           <AiPredictor />
         </Card>
       </div>
