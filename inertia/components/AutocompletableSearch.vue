@@ -5,9 +5,13 @@ import type { PlacesApiResponse } from '../../services/GoogleMapsService'
 import { debounce } from 'lodash-es'
 import { onClickOutside, useFocus } from '@vueuse/core'
 
+const props = defineProps<{
+  initialValue?: string
+}>()
+
 const placesEndpoint = axios.create({ baseURL: '/api/places' })
 const model = defineModel<PlacesApiResponse['places'][number]>()
-const search = ref('')
+const search = ref(props.initialValue ?? '')
 const results = ref<PlacesApiResponse['places']>([])
 const isLoading = ref(false)
 let doNotTriggerSearch = false
@@ -75,17 +79,18 @@ function updateModel(value: any) {
     <div class="relative">
       <input
         class="bg-neutral-800 rounded-full focus:outline-none py-3 px-4 w-120 placeholder:text-neutral-400 shadow-xl shadow-sky-300/5"
-        placeholder="¿A dónde quieres ir?"
+        placeholder="Busca un lugar..."
         type="text"
         name="place"
         ref="input"
         v-model="search"
         v-bind="$attrs"
+        autocomplete="off"
       />
       <button
         class="absolute right-1 inset-y-1 p-1 bg-neutral-700 rounded-full aspect-square flex items-center justify-center hover:bg-neutral-600 active:scale-[.97] transition-all"
       >
-        <Search :size="20" class="stroke-neutral-400" />
+        <MapPin :size="20" class="stroke-neutral-400" />
       </button>
     </div>
     <div
