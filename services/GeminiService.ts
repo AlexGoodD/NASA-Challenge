@@ -19,7 +19,7 @@ export default class GeminiService {
   }
 
   private buildPrompt(
-    weatherInformation: string,
+    forecast: string,
     userPlan: string,
     placeName: string,
     dateString: string
@@ -27,18 +27,17 @@ export default class GeminiService {
     return `Eres un asistente experto en evaluar planes de viaje basados en la información meteorológica proporcionada.
     Lugar del viaje: ${placeName}
     Fecha del viaje: ${dateString}
-    La información meteorológica es la siguiente: ${weatherInformation}
+    La información meteorológica es la siguiente: ${forecast}
     El plan de viaje del usuario es el siguiente: ${userPlan}`
   }
 
   public async ask(
-    weatherInformation: string,
+    forecast: string,
     userPlan: string,
     placeName: string,
     dateString: string
   ) {
-    const prompt = this.buildPrompt(weatherInformation, userPlan, placeName, dateString)
-
+    const prompt = this.buildPrompt(forecast, userPlan, placeName, dateString)
     return await this.model.invoke(prompt)
   }
 }

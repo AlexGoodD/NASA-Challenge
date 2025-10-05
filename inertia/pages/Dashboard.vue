@@ -16,6 +16,7 @@ const place = ref<PlacesApiResponse['places'][number]>()
 
 watch(place, (_newPlace) => {
   // Handle place change logic here
+  console.log(place)
 })
 </script>
 
@@ -46,7 +47,7 @@ watch(place, (_newPlace) => {
 
       <div class="right">
         <Card>
-          <AiPredictor />
+          <AiPredictor :place="place!"/>
         </Card>
       </div>
     </div>

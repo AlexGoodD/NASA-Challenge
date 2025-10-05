@@ -3,6 +3,11 @@ import axios from 'axios'
 import { Send } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
+import { Place } from '../../services/GoogleMapsService';
+
+const props = defineProps<{
+  place: Place
+}>()
 
 const predictViabilityEndpoint = axios.create({
   baseURL: '/api/weather/predict-viability',
@@ -12,15 +17,7 @@ const predictViabilityEndpoint = axios.create({
 })
 
 const userPlan = ref('')
-const date = '2025-12-31'
-const placeName = 'Parque Fundidora'
-const weatherInformation = {
-  temperature: 22,
-  humidity: 60,
-  windSpeed: 10,
-  uvIndex: 5,
-  visibility: 10,
-}
+const date = '2026-01-01'
 
 type ResponseData = {
   score: number
@@ -75,10 +72,11 @@ async function sendPredictionRequest() {
   try {
     const response = await predictViabilityEndpoint.get('', {
       params: {
-        weatherInformation: weatherInformation,
+        lat: props.place.location.latitude,
+        lon: props.place.location.longitude,
         userPlan: userPlan.value,
         date: date,
-        placeName: placeName,
+        placeName: props.place.displayName.text,
       },
     })
 

@@ -1,14 +1,16 @@
 import axios from 'axios'
 import env from '#start/env'
 
+export type Place = {
+  id: string
+  displayName: { text: string; languageCode: string }
+  location: { latitude: number; longitude: number }
+  formattedAddress: string
+  types: string[]
+}
+
 export type PlacesApiResponse = {
-  places: {
-    id: string
-    displayName: { text: string; languageCode: string }
-    location: { latitude: number; longitude: number }
-    formattedAddress: string
-    types: string[]
-  }[]
+  places: Place[]
 }
 
 const placesApiClient = axios.create({
