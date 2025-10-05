@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import type { PlacesApiResponse } from '../../services/GoogleMapsService'
-import { debounce, initial } from 'lodash-es'
-import { onClickOutside, useFocus } from '@vueuse/core'
+import { debounce } from 'lodash-es'
+import { useFocus } from '@vueuse/core'
 
 const props = defineProps<{
   initialValue?: string
@@ -16,6 +16,10 @@ const results = ref<PlacesApiResponse['places']>([])
 const isLoading = ref(false)
 let doNotTriggerSearch = false
 const didRequestErrored = ref(false)
+
+const input = ref<HTMLInputElement>()
+const { focused } = useFocus(input)
+const isDropdownActive = ref(false)
 
 onMounted(async () => {
   if (props.initialValue) {
@@ -38,9 +42,9 @@ async function fetch() {
 
 const debounceFetch = debounce(fetch, 500)
 
-watch([search], () => {
+watch(search, () => {
   if (doNotTriggerSearch) {
-    toggleSearchTriggerProtection()
+    doNotTriggerSearch = false
     return
   }
   if (didRequestErrored) didRequestErrored.value = false
@@ -48,37 +52,30 @@ watch([search], () => {
   debounceFetch()
 })
 
-function toggleSearchTriggerProtection() {
-  doNotTriggerSearch = !doNotTriggerSearch
-}
-
-const input = ref()
-const dropdown = ref()
-const { focused } = useFocus(input)
-const isActive = ref(false)
-
-watch(focused, () => {
-  isActive.value = true
-})
-
-watch(isActive, (value) => {
-  if (!value) {
-    toggleSearchTriggerProtection()
-    if (model.value) search.value = model.value.displayName.text
+watch(focused, (isFocused) => {
+  if (isFocused) {
+    isDropdownActive.value = true
+  } else {
+    setTimeout(() => {
+      isDropdownActive.value = false
+    }, 200)
   }
 })
 
-onClickOutside(dropdown, () => {
-  if (!isActive) return
-  isActive.value = false
+watch(isDropdownActive, (isActive) => {
+  if (!isActive && model.value && search.value !== model.value.displayName.text) {
+    doNotTriggerSearch = true
+    search.value = model.value.displayName.text
+  }
 })
 
-function updateModel(value: any) {
-  input.value.blur()
-  nextTick(() => {
-    isActive.value = false
-    model.value = value
-  })
+function updateModel(value: PlacesApiResponse['places'][number] | null) {
+  model.value = value
+  if (value) {
+    doNotTriggerSearch = true
+    search.value = value.displayName.text
+  }
+  isDropdownActive.value = false
 }
 </script>
 
@@ -98,17 +95,31 @@ function updateModel(value: any) {
       <button
         class="absolute right-1 inset-y-1 p-1 bg-neutral-700 rounded-full aspect-square flex items-center justify-center hover:bg-neutral-600 active:scale-[.97] transition-all"
       >
-        <MapPin :size="20" class="stroke-neutral-400" />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="stroke-neutral-400"
+        >
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
       </button>
     </div>
     <div
-      ref="dropdown"
       class="absolute top-14 inset-x-0 rounded-lg bg-neutral-800 shadow-xl shadow-white/5 z-50 overflow-hidden"
-      v-if="isActive"
+      v-if="isDropdownActive"
     >
       <ul v-if="results.length" class="grid">
         <li
           v-for="result in results"
+          :key="result.id"
           class="px-3 py-2 hover:bg-neutral-700 cursor-pointer flex items-center gap-2"
           @mousedown="!isLoading ? updateModel(result) : null"
         >
