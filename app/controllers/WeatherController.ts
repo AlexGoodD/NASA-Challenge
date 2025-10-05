@@ -78,13 +78,40 @@ export default class WeatherController {
   }
 
   public async predictViability({ request }: HttpContext) {
-    const { weatherInformation, userPlan, date, placeName } = await request.validateUsing(
-      predictWeatherViabilityValidator
-    )
+    try{
+      const { lat, lon, userPlan, date, placeName } = await request.validateUsing(
+        predictWeatherViabilityValidator
+      )
 
-    const geminiService = new GeminiService()
+      const geminiService = new GeminiService()
+      const forecast: any = await getFutureForecast({lat, lon, date: '2026-01-01'})
+      const toCelsius = (k: number) => (k - 273.15).toFixed(1)
 
-    return await geminiService.ask(JSON.stringify(weatherInformation), userPlan, placeName, date)
+      const tempMin = toCelsius(forecast.temperature.min)
+      const tempMax = toCelsius(forecast.temperature.max)
+      const tempAfternoon = toCelsius(forecast.temperature.afternoon)
+      const wind = forecast.wind?.max?.speed ?? 0
+      const humidity = forecast.humidity?.afternoon ?? 0
+      const clouds = forecast.cloud_cover?.afternoon ?? 0
+      const rain = forecast.precipitation?.total ?? 0
+
+      const summarizedForecast = `
+        Temperatura mínima: ${tempMin} °C
+        Temperatura máxima: ${tempMax} °C
+        Temperatura promedio en la tarde: ${tempAfternoon} °C
+        Velocidad máxima del viento: ${wind} m/s
+        Humedad: ${humidity}%
+        Nubosidad: ${clouds}%
+        Precipitación total: ${rain} mm
+        Presión atmosférica: ${forecast.pressure?.afternoon ?? 0} hPa
+      `.trim()
+
+
+
+      return await geminiService.ask(summarizedForecast, userPlan, placeName, date)
+    } catch(error){
+      console.log(error)
+    }
   }
 }
 
