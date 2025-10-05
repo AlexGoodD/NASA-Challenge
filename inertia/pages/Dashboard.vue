@@ -124,8 +124,8 @@ onMounted(() => {
         <!--Ciudad/Pais-->
         <p>{{ city }}, {{ country }}</p>
       </div>
-      <AutocompletableSearch v-model="place" />
-      <div class="flex gap-2">
+      <div class="flex gap-4">
+        <AutocompletableSearch v-model="place" />
         <DatePicker />
       </div>
     </header>
