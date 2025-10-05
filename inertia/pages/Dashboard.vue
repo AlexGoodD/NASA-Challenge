@@ -188,10 +188,10 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <Card title="Visibilidad">
           <Visibility :visibility="weatherData.current.visibility / 1000" />
         </Card>
-        <Card title="Pressure">
+        <Card title="Presión">
           <Pressure :pressure="weatherData.current.pressure" />
         </Card>
-        <Card title="Heat Index">
+        <Card title="Índice de calor">
           <HeatIndex
             :temperature="weatherData.current.temperature"
             :humidity="weatherData.current.humidity"

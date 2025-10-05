@@ -23,7 +23,8 @@ const weatherStyle = computed(() => {
 
 <template>
   <div class="flex flex-col items-center text-white space-y-2">
-    <i :class="weatherStyle.icon" :style="{ fontSize: '6rem', color: weatherStyle.color }"></i>
+    <i :class="weatherStyle.icon" :style="{ fontSize: '100px' }" class="text-gray-300"></i>
+
     <div class="text-center">
       <h2 class="text-2xl font-bold">{{ props.hourlyData?.[0] ?? '--' }} %</h2>
       <div class="flex items-center space-x-2 text-sm text-gray-400">
