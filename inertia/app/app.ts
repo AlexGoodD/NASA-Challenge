@@ -7,7 +7,7 @@ import type { DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
 import * as LucideIcons from 'lucide-vue-next'
-
+import 'weather-icons/css/weather-icons.css'
 const appName = import.meta.env.VITE_APP_NAME || 'Will It Rain On My Parade?'
 
 createInertiaApp({

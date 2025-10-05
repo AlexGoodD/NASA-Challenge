@@ -11,6 +11,8 @@ import AutocompletableSearch from '~/components/AutocompletableSearch.vue'
 import { onMounted, ref, watch } from 'vue'
 import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
+import Pressure from '~/components/Dashboard/Pressure.vue'
+import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -128,11 +130,11 @@ onMounted(() => {
         <Card title="Visibility">
           <Visibility :weather-data="weatherData" />
         </Card>
-        <Card title="Humidity">
-          <Humidity :weather-data="weatherData" />
+        <Card title="Pressure">
+          <Pressure />
         </Card>
-        <Card title="Visibility">
-          <Visibility :weather-data="weatherData" />
+        <Card title="Heat Index">
+          <HeatIndex />
         </Card>
       </div>
 

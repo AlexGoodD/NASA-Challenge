@@ -40,7 +40,7 @@ onMounted(() => {
 <template>
   <div class="uv-index">
     <canvas id="uvChart"></canvas>
-    <div class="uv-value"><strong>5.50</strong> UV</div>
+    <div class="text-2xl font-bold">5.50 UV</div>
   </div>
 </template>
 
