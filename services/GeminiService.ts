@@ -39,6 +39,7 @@ export default class GeminiService {
     dateString: string
   ) {
     const prompt = this.buildPrompt(forecast, userPlan, placeName, dateString)
+    console.log(prompt)
     return await this.model.invoke(prompt)
   }
 }

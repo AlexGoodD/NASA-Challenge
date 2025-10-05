@@ -83,7 +83,7 @@ async function sendPredictionRequest() {
       params: {
         lat: props.place.location.latitude,
         lon: props.place.location.longitude,
-        userPlan: userPlan.value,
+        userPlan: planToSend,
         date: date,
         placeName: props.place.displayName.text,
       },

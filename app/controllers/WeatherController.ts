@@ -108,8 +108,6 @@ export default class WeatherController {
         Presión atmosférica: ${forecast.pressure?.afternoon ?? 0} hPa
       `.trim()
 
-      
-
       return await geminiService.ask(summarizedForecast, userPlan, placeName, date)
     } catch(error){
       console.log(error)
