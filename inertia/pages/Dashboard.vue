@@ -61,7 +61,7 @@ async function getApproximateLocation() {
 }
 
 function requestLocationPermission() {
-  if (!navigator.geolocation || !navigator.geolocation.getCurrentPosition) {
+  if (!navigator.geolocation || navigator.userAgent.indexOf('Firefox') != -1) {
     getApproximateLocation()
     return
   }
@@ -142,12 +142,10 @@ function generateHourlyHumidityRecord(weather: WeatherData): Record<number, numb
 function getMaxValue(data: Record<string, any>[], key: string): number {
   return Math.max(...data.map((item) => item[key] || 0))
 }
-
-const reRenderKey = ref(0)
 </script>
 
 <template>
-  <div class="dashboard">
+  <div class="dashboard overflow-hidden">
     <header class="mb-10 mt-5 flex items-center justify-center">
       <AutocompletableSearch v-model="place" :initial-value="`${city}, ${country}`" :key="city" />
     </header>

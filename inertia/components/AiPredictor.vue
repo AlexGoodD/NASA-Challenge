@@ -125,7 +125,7 @@ function onLeave(el: any, done: any) {
 <template>
   <div class="flex flex-col h-[80dvh] max-h-[82dvh] w-full -mt-4">
     <div class="flex-1 overflow-y-auto pr-3 pt-3 -mx-4 px-4 pb-5">
-      <div v-if="prediction" class="flex flex-col *:py-2">
+      <div v-if="prediction" class="flex flex-col *:py-2 text-sm">
         <div class="!pt-0 flex flex-col">
           <span> Puntaje de viabilidad </span>
           <span
