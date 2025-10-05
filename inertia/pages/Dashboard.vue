@@ -14,6 +14,7 @@ import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
 import { WeatherData } from '#controllers/WeatherController'
 import NasaMap from '~/components/Map/NasaMap.vue'
+import AiPredictor from '~/components/AiPredictor.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
