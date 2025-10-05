@@ -147,8 +147,8 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <MapPin :size="20" />
         <p>{{ city }}, {{ country }}</p>
       </div>
-      <AutocompletableSearch v-model="place" />
-      <div class="flex gap-2">
+      <div class="flex gap-4">
+        <AutocompletableSearch v-model="place" />
         <DatePicker />
       </div>
       }
