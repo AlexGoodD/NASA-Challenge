@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import type { PlacesApiResponse } from '../../services/GoogleMapsService'
-import { debounce } from 'lodash-es'
+import { debounce, initial } from 'lodash-es'
 import { onClickOutside, useFocus } from '@vueuse/core'
 
 const props = defineProps<{
@@ -16,6 +16,14 @@ const results = ref<PlacesApiResponse['places']>([])
 const isLoading = ref(false)
 let doNotTriggerSearch = false
 const didRequestErrored = ref(false)
+
+onMounted(async () => {
+  if (props.initialValue) {
+    const response = await placesEndpoint.get(`?q=${encodeURIComponent(props.initialValue)}`)
+    results.value = response.data.places
+    updateModel(results.value[0] ?? null)
+  }
+})
 
 async function fetch() {
   try {

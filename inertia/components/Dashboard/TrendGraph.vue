@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Chart } from 'chart.js/auto'
+import type { Chart as ChartInstance } from 'chart.js/auto'
 import { generateHourlyLabels } from '~/helpers/DayHoursLabel'
 
 interface Props {
@@ -8,6 +9,9 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const canvasRef = ref<HTMLCanvasElement | null>(null)
+let chartInstance: ChartInstance<'bar'> | null = null
 
 const actualHour = new Date().getHours()
 const selectedHour = ref(actualHour)
@@ -21,10 +25,9 @@ const windData = computed(() => {
 })
 
 onMounted(() => {
-  const canvas = document.getElementById('trendGraph') as HTMLCanvasElement
-  if (!canvas) throw new Error('Canvas element not found')
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Could not get 2D context')
+  if (!canvasRef.value) return
+  const ctx = canvasRef.value.getContext('2d')
+  if (!ctx) return
 
   const gradient = ctx.createLinearGradient(0, 0, 0, 200)
   gradient.addColorStop(0, 'rgba(255,255,255,0.9)')
@@ -37,16 +40,13 @@ onMounted(() => {
   const labels = generateHourlyLabels()
   const data = windData.value.map((value) => value.toFixed(2))
 
-  const getBarColors = () => {
+  const getBarColors = (): (CanvasGradient | string)[] => {
     return windData.value.map((_, index) => {
-      if (index === selectedHour.value) {
-        return selectedGradient
-      }
-      return gradient
+      return index === selectedHour.value ? selectedGradient : gradient
     })
   }
 
-  const chart = new Chart(ctx, {
+  chartInstance = new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
@@ -66,36 +66,36 @@ onMounted(() => {
         legend: { display: false },
       },
       scales: {
-        x: {
-          display: false, // oculta eje X
-          grid: { display: false },
-        },
-        y: {
-          display: false, // oculta eje Y
-          grid: { display: false },
-        },
+        x: { display: false, grid: { display: false } },
+        y: { display: false, grid: { display: false } },
       },
       onHover: (_, elements) => {
-        canvas.style.cursor = elements.length > 0 ? 'pointer' : 'default'
+        if (canvasRef.value) {
+          canvasRef.value.style.cursor = elements.length > 0 ? 'pointer' : 'default'
+        }
       },
       onClick: (_, elements) => {
-        if (elements.length > 0) {
-          const clickedIndex = elements[0].index
-          selectedHour.value = clickedIndex
-
-          // Actualizar los colores de las barras
-          chart.data.datasets[0].backgroundColor = getBarColors()
-          chart.update()
+        if (elements.length > 0 && chartInstance) {
+          selectedHour.value = elements[0].index
+          chartInstance.data.datasets[0].backgroundColor = getBarColors()
+          chartInstance.update()
         }
       },
     },
   })
 })
+
+watch(windData, (newData) => {
+  if (chartInstance) {
+    chartInstance.data.datasets[0].data = newData.map((value) => value.toFixed(2))
+    chartInstance.update()
+  }
+})
 </script>
 
 <template>
   <div class="wind-status">
-    <canvas id="trendGraph"></canvas>
+    <canvas ref="canvasRef"></canvas>
     <div class="info">
       <span
         ><strong>{{ windData[selectedHour].toFixed(2) }}</strong> km/h</span
@@ -109,25 +109,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped>
-.wind-status {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-canvas {
-  max-height: 120px;
-  width: 100%;
-}
-.info {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-.info strong {
-  font-weight: 700;
-}
-</style>

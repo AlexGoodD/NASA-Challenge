@@ -106,7 +106,7 @@ function selectDate(day: number) {
         name="when"
         :value="`para el ${format(selectedDate, 'PPP', { locale: es })}`"
         readonly
-        class="bg-transparent outline-none cursor-pointer text-sm"
+        class="bg-transparent outline-none cursor-pointer text-sm w-90"
       />
     </label>
     <Transition>

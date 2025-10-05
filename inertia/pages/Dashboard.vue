@@ -61,7 +61,7 @@ async function getApproximateLocation() {
 }
 
 function requestLocationPermission() {
-  if (!navigator.geolocation) {
+  if (!navigator.geolocation || !navigator.geolocation.getCurrentPosition) {
     getApproximateLocation()
     return
   }
@@ -142,6 +142,8 @@ function generateHourlyHumidityRecord(weather: WeatherData): Record<number, numb
 function getMaxValue(data: Record<string, any>[], key: string): number {
   return Math.max(...data.map((item) => item[key] || 0))
 }
+
+const reRenderKey = ref(0)
 </script>
 
 <template>
@@ -150,18 +152,17 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       <AutocompletableSearch v-model="place" :initial-value="`${city}, ${country}`" :key="city" />
     </header>
     <div class="grid grid-cols-4 gap-4 w-full :" v-if="isLoading">
-      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70 *:min-h-46">
-        <Card class="col-span-2 h-72 animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
-        <Card class="row-span-3 h-full animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
-        <Card class="h-72 animate-pulse bg-neutral-900" />
+      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70 *:min-h-50">
+        <Card class="col-span-2 h-72 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 row-span-2 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 animate-pulse bg-neutral-800/60" />
+        <Card class="h-72 animate-pulse bg-neutral-800/60" />
       </div>
       <div class="right">
-        <Card class="max-h-[82dvh] sticky top-3 h-full animate-pulse bg-neutral-900" />
+        <Card class="max-h-[82dvh] sticky top-3 h-full animate-pulse bg-neutral-800/60" />
       </div>
     </div>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">

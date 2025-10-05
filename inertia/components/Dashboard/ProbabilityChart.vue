@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref, watch } from 'vue'
 import { Chart } from 'chart.js/auto'
+import type { Chart as ChartInstance } from 'chart.js/auto'
 import Card from '~/components/UI/Card.vue'
 
 interface Props {
@@ -9,6 +10,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const chartCanvas = ref<HTMLCanvasElement | null>(null)
+let chartInstance: ChartInstance | null = null
+
 const chartData = computed(() => {
   const data = []
   for (let i = 0; i < 24; i++) {
@@ -16,9 +20,9 @@ const chartData = computed(() => {
   }
   return data
 })
+
 onMounted(() => {
-  const ctx = document.getElementById('rainChart')
-  if (!ctx) return
+  if (!chartCanvas.value) return
 
   function generateHourlyLabels() {
     const labels = []
@@ -31,15 +35,14 @@ onMounted(() => {
   }
 
   const labels = generateHourlyLabels()
-  const data = chartData.value
 
-  new Chart(ctx as HTMLCanvasElement, {
+  chartInstance = new Chart(chartCanvas.value, {
     data: {
       labels,
       datasets: [
         {
           type: 'line',
-          data,
+          data: chartData.value,
           borderColor: '#658ab5',
           backgroundColor: '#60a5fa',
           fill: false,
@@ -81,8 +84,9 @@ onMounted(() => {
             maxRotation: 0,
             minRotation: 0,
             callback: function (_value, index) {
-              const hourLabel = labels[index]
-              const probability = data[index]
+              const chart = this.chart
+              const hourLabel = chart.data.labels[index]
+              const probability = chart.data.datasets[0].data[index]
               return [hourLabel, `${probability}%`]
             },
           },
@@ -91,6 +95,13 @@ onMounted(() => {
     },
   })
 })
+
+watch(chartData, (newData) => {
+  if (chartInstance) {
+    chartInstance.data.datasets[0].data = newData
+    chartInstance.update()
+  }
+})
 </script>
 
 <template>
@@ -98,11 +109,9 @@ onMounted(() => {
     <div class="overflow-x-hidden pt-4">
       <div class="overflow-x-auto">
         <div class="min-w-[200px]">
-          <canvas id="rainChart"></canvas>
+          <canvas ref="chartCanvas"></canvas>
         </div>
       </div>
     </div>
   </Card>
 </template>
-
-<style scoped></style>
