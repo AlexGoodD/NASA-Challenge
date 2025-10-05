@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+      target: runner
+    container_name: nasa-challenge-app
+    ports:
+      - "3333:3333"
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
