@@ -82,5 +82,5 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="mapContainer" v-bind="$attrs"></div>
+  <div class="min-h-[46.5rem]" ref="mapContainer" v-bind="$attrs"></div>
 </template>

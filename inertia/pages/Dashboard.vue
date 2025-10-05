@@ -164,7 +164,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       </div>
     </div>
     <div class="grid grid-cols-4 gap-4" v-else-if="weatherData">
-      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
+      <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70 grid-auto-rows-fr">
         <WeatherCard class="col-span-2" :weather="weatherData" />
         <ProbabilityChart
           v-if="weatherData?.hourly"
@@ -211,7 +211,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       </div>
 
       <div class="right">
-        <Card class="max-h-[82dvh] sticky top-3">
+        <Card class="max-h-[90dvh] sticky top-3">
           <AiPredictor :place="place!" />
         </Card>
       </div>
