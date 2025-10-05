@@ -21,8 +21,8 @@ let map = null
 
 function fetchMap() {
   map.on('load', () => {
-    // La fecha que queremos visualizar
-    const aDate = '2025-10-03' // Puedes cambiar esta fecha
+    console.log(map.getStyle().layers)
+    const aDate = '2024-10-03' // Puedes cambiar esta fecha
 
     map.addSource(`nasa-imagery-source`, {
       type: 'raster',
@@ -35,16 +35,18 @@ function fetchMap() {
         '<a href="https://earthdata.nasa.gov/eosdis/science-system-description/services-and-tools/gibs">NASA GIBS</a>',
     })
 
-    map.addLayer({
-      id: `nasa-imagery-layer`,
-      type: 'raster',
-      source: 'nasa-imagery-source', // Debe coincidir con el ID de la fuente
-      paint: {
-        'raster-opacity': 0.85, // Puedes ajustar la opacidad
-      },
-      maxzoom: 13,
-      minzoom: 12,
-    })
+    map.addLayer(
+      {
+        id: 'nasa-imagery-layer',
+        type: 'raster',
+        source: 'nasa-imagery-source',
+        paint: {
+          'raster-opacity': 1, // La pongo en 1 para que sea bien visible
+        },
+      }
+      // --- ESTA ES LA SOLUCIÓN ---
+      // Dibuja nuestra capa justo debajo de las etiquetas de las ciudades.
+    )
   })
 }
 
@@ -52,9 +54,9 @@ function createMap() {
   if (mapContainer.value) {
     map = new mapboxgl.Map({
       container: mapContainer.value, // El elemento div del mapa.
-      style: 'mapbox://styles/mapbox/streets-v12', // Estilo base del mapa. Puedes cambiarlo.
+      style: 'mapbox://styles/mapbox/dark-v11', // Estilo base del mapa. Puedes cambiarlo.
       center: [props.lon, props.lat], // Coordenadas iniciales [longitud, latitud] (Ciudad de México).
-      zoom: 13, // Nivel de zoom inicial.
+      zoom: 9, // Nivel de zoom inicial.
     })
   }
 }
@@ -66,6 +68,7 @@ watch(
   }
 )
 onMounted(() => {
+  if (!props.lon || !props.lat) return
   createMap()
   fetchMap()
 })
