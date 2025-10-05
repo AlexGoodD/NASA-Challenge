@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { predictWeatherViabilityValidator } from '#validators/weather'
 import GeminiService from '../../services/GeminiService.js'
 import env from '#start/env'
+import { getFutureForecast } from '../../services/Predictor.js'
 
 export default class WeatherController {
   public async index({ inertia }: HttpContext) {
@@ -24,8 +25,6 @@ export default class WeatherController {
     console.log(`${this.weatherApiBaseUrl}?${params}`)
     const owResponse = await fetch(`${this.weatherApiBaseUrl}?${params}`)
     if (!owResponse.ok) {
-      console.log(owResponse)
-      console.error('Failed to fetch weather data:', owResponse.statusText)
       return response.status(owResponse.status).json({ error: 'Failed to fetch weather data' })
     }
 
@@ -79,13 +78,13 @@ export default class WeatherController {
   }
 
   public async predictViability({ request }: HttpContext) {
-    try{
+    try {
       const { lat, lon, userPlan, date, placeName } = await request.validateUsing(
         predictWeatherViabilityValidator
       )
 
       const geminiService = new GeminiService()
-      const forecast: any = await getFutureForecast({lat, lon, date: '2026-01-01'})
+      const forecast: any = await getFutureForecast({ lat, lon, date })
       const toCelsius = (k: number) => (k - 273.15).toFixed(1)
 
       const tempMin = toCelsius(forecast.temperature.min)
@@ -108,7 +107,7 @@ export default class WeatherController {
       `.trim()
 
       return await geminiService.ask(summarizedForecast, userPlan, placeName, date)
-    } catch(error){
+    } catch (error) {
       console.log(error)
     }
   }

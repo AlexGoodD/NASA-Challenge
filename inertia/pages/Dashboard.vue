@@ -146,9 +146,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       </div>
       <div class="flex gap-4">
         <AutocompletableSearch v-model="place" />
-        <DatePicker />
       </div>
-      }
     </header>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
@@ -197,8 +195,8 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       </div>
 
       <div class="right">
-        <Card>
-          <AiPredictor :place="place!"/>
+        <Card class="max-h-[82dvh] sticky top-0">
+          <AiPredictor :place="place!" />
         </Card>
       </div>
     </div>
