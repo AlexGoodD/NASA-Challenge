@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
-// 🔹 Valores base (pueden venir de props o API)
-const temperature = ref<number>(30) // °C
-const humidity = ref<number>(70) // %
+const props = defineProps<{
+  temperature: number
+  humidity: number
+}>()
 
-// 🔹 Cálculo del índice de calor (Heat Index)
 const heatIndex = computed<number>(() => {
-  const T = temperature.value
-  const R = humidity.value
+  const T = props.temperature
+  const R = props.humidity
 
   const HI =
     -8.784695 +
@@ -21,24 +21,21 @@ const heatIndex = computed<number>(() => {
     0.00072546 * T * R * R -
     0.000003582 * T * T * R * R
 
-  // ✅ Convertimos a número para evitar errores de tipo
   return Number(HI.toFixed(1))
 })
 
-// 🔹 Texto descriptivo según el nivel de calor
 const heatLevel = computed<string>(() => {
   const hi = heatIndex.value
-  if (hi < 27) return 'Comfortable'
-  if (hi < 32) return 'Caution: Warm'
-  if (hi < 41) return 'Extreme caution'
-  return 'Danger: Very Hot!'
+  if (hi < 27) return 'Temperatura ideal, ¡disfruta el día!'
+  if (hi < 32) return 'Hace calor, ¡mantente fresco e hidratado!'
+  if (hi < 41) return '¡Mucho cuidado! El calor es intenso, busca la sombra.'
+  return '¡Peligro! Calor extremo, evita salir si no es necesario.'
 })
 </script>
 
 <template>
   <div class="flex flex-col items-center text-white space-y-2">
     <ThermometerSun class="text-gray-300" :size="100" />
-
     <div class="text-center">
       <h2 class="text-2xl font-bold">{{ heatIndex }}°C</h2>
       <p class="text-gray-400 text-sm">{{ heatLevel }}</p>

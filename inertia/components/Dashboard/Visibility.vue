@@ -19,7 +19,6 @@ const message = computed(() => {
     <div class="text-center">
       <h2 class="text-2xl font-bold">{{ visibility }} km</h2>
       <div class="flex items-center space-x-2 text-sm text-gray-400">
-        <Eye :size="16" />
         <p>{{ message }}</p>
       </div>
     </div>

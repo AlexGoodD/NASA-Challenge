@@ -35,7 +35,6 @@ const fetchWeatherData = async (lat: number, lon: number) => {
       longitude: lon,
     })
     weatherData.value = response.data as WeatherData
-    console.log('Weather data received:', response.data)
   } catch (error) {
     console.error('Error fetching weather data:', error)
   } finally {
@@ -134,8 +133,6 @@ function generateHourlyHumidityRecord(weather: WeatherData): Record<number, numb
 }
 
 function getMaxValue(data: Record<string, any>[], key: string): number {
-  console.log('Calculating max value for key:', key, 'in data:', data)
-  console.log(Math.max(...data.map((item) => item[key] || 0)))
   return Math.max(...data.map((item) => item[key] || 0))
 }
 </script>
@@ -147,8 +144,8 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <MapPin :size="20" />
         <p>{{ city }}, {{ country }}</p>
       </div>
-      <AutocompletableSearch v-model="place" />
-      <div class="flex gap-2">
+      <div class="flex gap-4">
+        <AutocompletableSearch v-model="place" />
         <DatePicker />
       </div>
       }
@@ -188,11 +185,14 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <Card title="Visibilidad">
           <Visibility :visibility="weatherData.current.visibility / 1000" />
         </Card>
-        <Card title="Pressure">
-          <Pressure />
+        <Card title="Presión">
+          <Pressure :pressure="weatherData.current.pressure" />
         </Card>
-        <Card title="Heat Index">
-          <HeatIndex />
+        <Card title="Índice de calor">
+          <HeatIndex
+            :temperature="weatherData.current.temperature"
+            :humidity="weatherData.current.humidity"
+          />
         </Card>
       </div>
 

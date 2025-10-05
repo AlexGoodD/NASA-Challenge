@@ -1,18 +1,14 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { getWeatherValidator, predictWeatherViabilityValidator } from '#validators/weather'
+import { predictWeatherViabilityValidator } from '#validators/weather'
 import GeminiService from '../../services/GeminiService.js'
-import {getFutureForecast} from '../../services/Predictor.js'
 import env from '#start/env'
 
 export default class WeatherController {
-  public async index({ inertia, request }: HttpContext) {
-    const payload = await request.validateUsing(getWeatherValidator)
-    const weatherInformation = {}
-
+  public async index({ inertia }: HttpContext) {
     return inertia.render('Dashboard')
   }
 
-  private readonly apiKey: string = env.get('OPEN_WEATHER_API_KEY') ?? ""
+  private readonly apiKey: string = env.get('OPEN_WEATHER_API_KEY')
   private readonly weatherApiBaseUrl = 'https://api.openweathermap.org/data/3.0/onecall'
 
   public async search({ request, response }: HttpContext) {
@@ -25,6 +21,7 @@ export default class WeatherController {
       units: 'metric',
     })
 
+    console.log(`${this.weatherApiBaseUrl}?${params}`)
     const owResponse = await fetch(`${this.weatherApiBaseUrl}?${params}`)
     if (!owResponse.ok) {
       console.log(owResponse)
@@ -58,6 +55,7 @@ export default class WeatherController {
         summary: apiData.daily[0].summary,
         maxTemperature: apiData.daily[0].temp.max,
         minTemperature: apiData.daily[0].temp.min,
+        temperatureAfternoon: apiData.daily[0].temp.day,
         precipitationProbability: apiData.daily[0].pop * 100,
         dewPoint: apiData.daily[0].dew_point,
       },
@@ -75,6 +73,7 @@ export default class WeatherController {
       })),
     }
 
+    console.log(weatherData)
 
     return weatherData
   }
@@ -144,8 +143,9 @@ export interface DailyForecast {
   summary: string
   maxTemperature: number
   minTemperature: number
+  temperatureAfternoon: number
   precipitationProbability: number
-  dewPoint?: number
+  dewPoint: number
 }
 
 export interface HourlyForecast {

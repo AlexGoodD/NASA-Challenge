@@ -17,7 +17,7 @@ export async function getFutureForecast(
   const {data} = await axios.get(url, {
     params: {
       appid: env.get('OPEN_WEATHER_API_KEY'),
-      lat, 
+      lat,
       lon,
       date
     }
