@@ -2,22 +2,13 @@
 import { onMounted, computed } from 'vue'
 import { Chart } from 'chart.js/auto'
 import Card from '~/components/UI/Card.vue'
+import { generateHourlyLabels } from '~/helpers/DayHoursLabel'
 
 interface Props {
   hourlyData: Record<number, number>
 }
 
 const props = defineProps<Props>()
-
-function generateHourlyLabels() {
-  const labels = []
-  for (let i = 0; i < 24; i++) {
-    const hour = i === 0 ? 12 : i > 12 ? i - 12 : i
-    const period = i < 12 ? 'AM' : 'PM'
-    labels.push(`${hour}${period}`)
-  }
-  return labels
-}
 
 const chartData = computed(() => {
   const data = []
