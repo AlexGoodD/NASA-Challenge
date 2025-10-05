@@ -35,7 +35,6 @@ const fetchWeatherData = async (lat: number, lon: number) => {
       longitude: lon,
     })
     weatherData.value = response.data as WeatherData
-    console.log('Weather data received:', response.data)
   } catch (error) {
     console.error('Error fetching weather data:', error)
   } finally {
@@ -134,8 +133,6 @@ function generateHourlyHumidityRecord(weather: WeatherData): Record<number, numb
 }
 
 function getMaxValue(data: Record<string, any>[], key: string): number {
-  console.log('Calculating max value for key:', key, 'in data:', data)
-  console.log(Math.max(...data.map((item) => item[key] || 0)))
   return Math.max(...data.map((item) => item[key] || 0))
 }
 </script>

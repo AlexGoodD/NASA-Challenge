@@ -3,6 +3,7 @@ import axios from 'axios'
 import { ArrowUp, LoaderCircle } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
+import { DailyForecast } from '#controllers/WeatherController'
 
 const predictViabilityEndpoint = axios.create({
   baseURL: '/api/weather/predict-viability',
@@ -10,6 +11,12 @@ const predictViabilityEndpoint = axios.create({
     'Content-Type': 'application/json',
   },
 })
+
+defineProps<{
+  weatherInformation: {
+    daily: DailyForecast
+  }
+}>()
 
 const userPlan = ref('')
 const date = '2025-12-31'
@@ -92,8 +99,6 @@ async function sendPredictionRequest() {
     })
 
     prediction.value = response.data as ResponseData
-
-    console.log('Predicción recibida:', prediction.value)
   } catch (error) {
     console.error('Error al enviar la solicitud de predicción:', error)
   } finally {

@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { predictWeatherViabilityValidator } from '#validators/weather'
 import GeminiService from '../../services/GeminiService.js'
 import env from '#start/env'
+import { getFutureForecast } from '../../services/Predictor.js'
 
 export default class WeatherController {
   public async index({ inertia }: HttpContext) {
@@ -21,10 +22,8 @@ export default class WeatherController {
       units: 'metric',
     })
 
-    console.log(`${this.weatherApiBaseUrl}?${params}`)
     const owResponse = await fetch(`${this.weatherApiBaseUrl}?${params}`)
     if (!owResponse.ok) {
-      console.log(owResponse)
       console.error('Failed to fetch weather data:', owResponse.statusText)
       return response.status(owResponse.status).json({ error: 'Failed to fetch weather data' })
     }
@@ -55,6 +54,7 @@ export default class WeatherController {
         summary: apiData.daily[0].summary,
         maxTemperature: apiData.daily[0].temp.max,
         minTemperature: apiData.daily[0].temp.min,
+        temperatureAfternoon: apiData.daily[0].temp.day,
         precipitationProbability: apiData.daily[0].pop * 100,
         dewPoint: apiData.daily[0].dew_point,
       },
@@ -72,19 +72,17 @@ export default class WeatherController {
       })),
     }
 
-    console.log(weatherData)
-
     return weatherData
   }
 
   public async predictViability({ request }: HttpContext) {
-    try{
+    try {
       const { lat, lon, userPlan, date, placeName } = await request.validateUsing(
         predictWeatherViabilityValidator
       )
 
       const geminiService = new GeminiService()
-      const forecast: any = await getFutureForecast({lat, lon, date: '2026-01-01'})
+      const forecast: any = await getFutureForecast({ lat, lon, date: '2026-01-01' })
       const toCelsius = (k: number) => (k - 273.15).toFixed(1)
 
       const tempMin = toCelsius(forecast.temperature.min)
@@ -106,10 +104,8 @@ export default class WeatherController {
         Presión atmosférica: ${forecast.pressure?.afternoon ?? 0} hPa
       `.trim()
 
-
-
       return await geminiService.ask(summarizedForecast, userPlan, placeName, date)
-    } catch(error){
+    } catch (error) {
       console.log(error)
     }
   }
@@ -144,6 +140,7 @@ export interface DailyForecast {
   summary: string
   maxTemperature: number
   minTemperature: number
+  temperatureAfternoon: number
   precipitationProbability: number
   dewPoint: number
 }
