@@ -170,7 +170,10 @@ function onLeave(el: any, done: any) {
       <div v-else-if="isLoading" class="flex flex-col items-center justify-center h-full gap-4">
         <LoaderCircle :size="48" class="stroke-neutral-500 animate-[spin_0.75s_infinite]" />
       </div>
-      <div v-else class="text-neutral-500 text-3xl font-semibold flex items-center h-full">
+      <div
+        v-else
+        class="text-neutral-500 text-2xl text-center font-semibold flex items-center h-full"
+      >
         Obtén un análisis de viabilidad y recomendaciones para tus planes.
       </div>
     </div>

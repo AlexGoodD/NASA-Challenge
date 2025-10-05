@@ -34,7 +34,7 @@ const heatLevel = computed<string>(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center text-white space-y-2">
+  <div class="flex flex-col items-center text-white space-y-5">
     <ThermometerSun class="text-gray-300" :size="100" />
     <div class="text-center">
       <h2 class="text-2xl font-bold">{{ heatIndex }}°C</h2>

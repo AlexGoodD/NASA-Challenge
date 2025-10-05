@@ -22,7 +22,7 @@ const weatherStyle = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center text-white space-y-2">
+  <div class="flex flex-col items-center text-white space-y-5">
     <i :class="weatherStyle.icon" :style="{ fontSize: '100px' }" class="text-gray-300"></i>
 
     <div class="text-center">

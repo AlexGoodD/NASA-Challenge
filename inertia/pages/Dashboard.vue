@@ -54,6 +54,11 @@ async function getApproximateLocation() {
   // ipinfo.io returns location in a "loc" string like "lat,lon"
   const [latitude, longitude] = geoResponse.data.loc.split(',').map(Number)
 
+  const { city: cityName, country: countryName } = geoResponse.data
+
+  city.value = cityName
+  country.value = countryName
+
   await fetchWeatherData(latitude, longitude)
 }
 
@@ -62,24 +67,27 @@ function requestLocationPermission() {
     return
   }
 
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      latitud.value = position.coords.latitude
-      longitud.value = position.coords.longitude
-      locationPermissionGranted.value = true
-      await fetchWeatherData(position.coords.latitude, position.coords.longitude)
-    },
-    async (error: GeolocationPositionError) => {
-      locationPermissionGranted.value = false
-      await getApproximateLocation()
-      console.error('Error getting location:', error)
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const { latitude, longitude } = position.coords
+    latitud.value = latitude
+    longitud.value = longitude
+    locationPermissionGranted.value = true
+
+    // Obtener ciudad y país usando BigDataCloud (API gratuita)
+    try {
+      const geoResponse = await axios.get(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=es`
+      )
+
+      // Asignar ciudad y país (maneja casos sin datos)
+      city.value = geoResponse.data.city || geoResponse.data.locality || 'Ubicación desconocida'
+      country.value = geoResponse.data.countryName || ''
+    } catch (geoError) {
+      console.error('Error obteniendo ciudad y país:', geoError)
     }
-  )
+
+    await fetchWeatherData(latitude, longitude)
+  })
 }
 
 watch(place, (newPlace) => {
@@ -151,7 +159,6 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <AutocompletableSearch v-model="place" />
         <DatePicker />
       </div>
-      }
     </header>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
