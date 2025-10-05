@@ -25,10 +25,11 @@ export default class GeminiService {
     dateString: string
   ) {
     return `Eres un asistente experto en evaluar planes de viaje basados en la información meteorológica proporcionada.
+    Si el mensaje no tiene sentido, el score debe ser 0.
     Lugar del viaje: ${placeName}
     Fecha del viaje: ${dateString}
     La información meteorológica es la siguiente: ${weatherInformation}
-    El plan de viaje del usuario es el siguiente: ${userPlan}`
+    El plan de viaje del usuario es el siguiente: ${userPlan}.`
   }
 
   public async ask(
