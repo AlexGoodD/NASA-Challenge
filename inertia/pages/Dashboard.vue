@@ -12,6 +12,8 @@ import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
+import { WeatherData } from '#controllers/WeatherController'
+import NasaMap from '~/components/Map/NasaMap.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -176,11 +178,12 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
             :max-uv-index="getMaxValue(weatherData?.hourly || [], 'uvi')"
           />
         </Card>
-        <MapSelector
+        <NasaMap
           :place-name="place?.displayName?.text || 'Ubicación actual'"
-          :latitude="latitud"
-          :longitude="longitud"
-          class="row-span-3 max-h-max"
+          :lat="latitud"
+          :lon="longitud"
+          :date="new Date('2024-10-04')"
+          class="row-span-3"
         />
         <Card title="Humidity">
           <Humidity :weather-data="weatherData" />
