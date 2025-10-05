@@ -59,8 +59,9 @@ export default class WeatherController {
       },
       hourly: apiData.hourly.slice(0, 24).map((hour: any) => ({
         timestamp: new Date(hour.dt * 1000),
-        temp: hour.temp,
+        temperature: hour.temp,
         precipitationProbability: hour.pop * 100,
+        windSpeed: hour.wind_speed,
         weather: {
           main: hour.weather[0].main,
           icon: hour.weather[0].icon,
@@ -120,6 +121,7 @@ export interface HourlyForecast {
   timestamp: Date
   temp: number
   precipitationProbability: number
+  windSpeed: number
   weather: {
     main: string
     icon: string

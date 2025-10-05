@@ -6,10 +6,7 @@ const value = ref<number | null>(null) // valor actual de UV
 const maxValue = ref<number | null>(null) // máximo del índice UV
 
 interface Props {
-  dailyData: {
-    uv_index_max: Record<number, number>
-    uv_index_clear_sky_max: Record<number, number>
-  }
+  uvIndex: number
 }
 
 const props = defineProps<Props>()

@@ -316,16 +316,28 @@ onMounted(() => {
  *   }
  * ]
  */
-function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
+function getHourlyPrecipitationProbabilityRecord(weather: WeatherData): Record<number, number> {
   const record: Record<number, number> = {}
-  if (!weatherData.value?.hourly) return record
+  if (!weather.hourly) return record
 
-  weatherData.value.hourly.forEach((entry) => {
+  weather.hourly.forEach((entry) => {
     const date = new Date(entry.timestamp)
     const hour = date.getHours()
     record[hour] = entry.precipitationProbability
   })
 
+  return record
+}
+
+function generateHourlyWindSleepRecord(weather: WeatherData): Record<number, number> {
+  const record: Record<number, number> = {}
+  if (!weather.hourly) return record
+
+  weather.hourly.forEach((entry) => {
+    const date = new Date(entry.timestamp)
+    const hour = date.getHours()
+    record[hour] = entry.windSpeed
+  })
   return record
 }
 </script>
@@ -342,24 +354,24 @@ function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
       <div class="flex gap-2">
         <DatePicker />
       </div>
+      }
     </header>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
         <WeatherCard class="col-span-2" :weather="weatherData" />
         <ProbabilityChart
           v-if="weatherData?.hourly"
-          :hourly-data="getHourlyPrecipitationProbabilityRecord"
+          :hourly-data="getHourlyPrecipitationProbabilityRecord(weatherData)"
         />
         <Card v-else />
         <Card title="Wind Status">
           <TrendGraph
-            v-if="weatherData?.hourly.wind_speed_10m"
-            :hourly-data="weatherData.hourly.wind_speed_10m"
+            v-if="weatherData?.hourly"
+            :hourly-data="generateHourlyWindSleepRecord(weatherData)"
           />
         </Card>
         <Card title="UV Index" class="min-h-[221px]">
           <UvIndex
-            v-if="weatherData?.daily.uv_index_clear_sky_max && weatherData?.daily.uv_index_max"
             :daily-data="{
               uv_index_max: weatherData.daily.uv_index_max,
               uv_index_clear_sky_max: weatherData.daily.uv_index_clear_sky_max,
