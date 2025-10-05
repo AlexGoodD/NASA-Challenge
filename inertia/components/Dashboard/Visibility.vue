@@ -13,7 +13,7 @@ const message = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center text-white space-y-2">
+  <div class="flex flex-col items-center text-white space-y-5">
     <CloudFog class="text-gray-300" :size="100" />
 
     <div class="text-center">

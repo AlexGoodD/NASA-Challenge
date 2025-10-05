@@ -3,7 +3,6 @@ import Card from '~/components/UI/Card.vue'
 import ProbabilityChart from '~/components/Dashboard/ProbabilityChart.vue'
 import TrendGraph from '~/components/Dashboard/TrendGraph.vue'
 import WeatherCard from '~/components/Dashboard/WeatherCard.vue'
-import MapSelector from '~/components/Map/MapSelector.vue'
 import UvIndex from '~/components/Dashboard/UVIndex.vue'
 import Humidity from '~/components/Dashboard/Humidity.vue'
 import Visibility from '~/components/Dashboard/Visibility.vue'
@@ -13,9 +12,9 @@ import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
-import AiPredictor from '~/components/AiPredictor.vue'
 import { WeatherData } from '#controllers/WeatherController'
-import DatePicker from '~/components/DatePicker.vue'
+import NasaMap from '~/components/Map/NasaMap.vue'
+import AiPredictor from '~/components/AiPredictor.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -53,6 +52,11 @@ async function getApproximateLocation() {
   // ipinfo.io returns location in a "loc" string like "lat,lon"
   const [latitude, longitude] = geoResponse.data.loc.split(',').map(Number)
 
+  const { city: cityName, country: countryName } = geoResponse.data
+
+  city.value = cityName
+  country.value = countryName
+
   await fetchWeatherData(latitude, longitude)
 }
 
@@ -61,24 +65,27 @@ function requestLocationPermission() {
     return
   }
 
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      latitud.value = position.coords.latitude
-      longitud.value = position.coords.longitude
-      locationPermissionGranted.value = true
-      await fetchWeatherData(position.coords.latitude, position.coords.longitude)
-    },
-    async (error: GeolocationPositionError) => {
-      locationPermissionGranted.value = false
-      await getApproximateLocation()
-      console.error('Error getting location:', error)
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0,
+  navigator.geolocation.getCurrentPosition(async (position) => {
+    const { latitude, longitude } = position.coords
+    latitud.value = latitude
+    longitud.value = longitude
+    locationPermissionGranted.value = true
+
+    // Obtener ciudad y país usando BigDataCloud (API gratuita)
+    try {
+      const geoResponse = await axios.get(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=es`
+      )
+
+      // Asignar ciudad y país (maneja casos sin datos)
+      city.value = geoResponse.data.city || geoResponse.data.locality || 'Ubicación desconocida'
+      country.value = geoResponse.data.countryName || ''
+    } catch (geoError) {
+      console.error('Error obteniendo ciudad y país:', geoError)
     }
-  )
+
+    await fetchWeatherData(latitude, longitude)
+  })
 }
 
 watch(place, (newPlace) => {
@@ -168,16 +175,17 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
             :max-uv-index="getMaxValue(weatherData?.hourly || [], 'uvi')"
           />
         </Card>
-        <MapSelector
+        <NasaMap
           :place-name="place?.displayName?.text || 'Ubicación actual'"
-          :latitude="latitud"
-          :longitude="longitud"
-          class="row-span-3 max-h-max"
+          :lat="latitud"
+          :lon="longitud"
+          :date="new Date('2024-10-04')"
+          class="row-span-3 rounded-xl"
         />
-        <Card title="Humedad">
+        <Card title="Humidity">
           <Humidity
             :hourly-data="generateHourlyHumidityRecord(weatherData)"
-            :dew-point="weatherData.daily.dewPoint!"
+            :dew-point="weatherData.daily.dewPoint"
           />
         </Card>
         <Card title="Visibilidad">
