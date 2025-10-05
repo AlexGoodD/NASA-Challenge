@@ -91,6 +91,239 @@ watch(place, (newPlace) => {
 onMounted(() => {
   requestLocationPermission()
 })
+
+/**
+ * [
+ *   {
+ *     "timestamp": "2025-10-05T05:00:00.000Z",
+ *     "temp": 22.07,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T06:00:00.000Z",
+ *     "temp": 22.02,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T07:00:00.000Z",
+ *     "temp": 21.7,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "02n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T08:00:00.000Z",
+ *     "temp": 21.45,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "02n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T09:00:00.000Z",
+ *     "temp": 21.22,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T10:00:00.000Z",
+ *     "temp": 21.14,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T11:00:00.000Z",
+ *     "temp": 19.7,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T12:00:00.000Z",
+ *     "temp": 19.5,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T13:00:00.000Z",
+ *     "temp": 20.64,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T14:00:00.000Z",
+ *     "temp": 22.14,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T15:00:00.000Z",
+ *     "temp": 23.71,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T16:00:00.000Z",
+ *     "temp": 24.82,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T17:00:00.000Z",
+ *     "temp": 26.36,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T18:00:00.000Z",
+ *     "temp": 30.2,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clear",
+ *       "icon": "01d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T19:00:00.000Z",
+ *     "temp": 29.61,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "02d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T20:00:00.000Z",
+ *     "temp": 29.84,
+ *     "precipitationProbability": 2,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "02d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T21:00:00.000Z",
+ *     "temp": 29.54,
+ *     "precipitationProbability": 28.000000000000004,
+ *     "weather": {
+ *       "main": "Rain",
+ *       "icon": "10d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T22:00:00.000Z",
+ *     "temp": 29.22,
+ *     "precipitationProbability": 39,
+ *     "weather": {
+ *       "main": "Rain",
+ *       "icon": "10d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-05T23:00:00.000Z",
+ *     "temp": 28.62,
+ *     "precipitationProbability": 42,
+ *     "weather": {
+ *       "main": "Rain",
+ *       "icon": "10d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-06T00:00:00.000Z",
+ *     "temp": 27.36,
+ *     "precipitationProbability": 39,
+ *     "weather": {
+ *       "main": "Rain",
+ *       "icon": "10d"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-06T01:00:00.000Z",
+ *     "temp": 26.16,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-06T02:00:00.000Z",
+ *     "temp": 25.5,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-06T03:00:00.000Z",
+ *     "temp": 24.77,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   },
+ *   {
+ *     "timestamp": "2025-10-06T04:00:00.000Z",
+ *     "temp": 24.91,
+ *     "precipitationProbability": 0,
+ *     "weather": {
+ *       "main": "Clouds",
+ *       "icon": "03n"
+ *     }
+ *   }
+ * ]
+ */
+function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
+  const record: Record<number, number> = {}
+  if (!weatherData.value?.hourly) return record
+
+  weatherData.value.hourly.forEach((entry) => {
+    const date = new Date(entry.timestamp)
+    const hour = date.getHours()
+    record[hour] = entry.precipitationProbability
+  })
+
+  return record
+}
 </script>
 
 <template>
@@ -102,8 +335,8 @@ onMounted(() => {
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
         <WeatherCard class="col-span-2" :weather="weatherData" />
         <ProbabilityChart
-          v-if="weatherData?.hourly.precipitation_probability"
-          :hourly-data="weatherData.hourly.precipitation_probability"
+          v-if="weatherData?.hourly"
+          :hourly-data="getHourlyPrecipitationProbabilityRecord"
         />
         <Card v-else />
         <Card title="Wind Status">

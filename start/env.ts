@@ -38,4 +38,5 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   GEMINI_API_KEY: Env.schema.string(),
   MAPS_API_KEY: Env.schema.string(),
+  OPEN_WEATHER_API_KEY: Env.schema.string(),
 })
