@@ -117,7 +117,10 @@ onMounted(() => {
         />
         <Card v-else />
         <Card title="Wind Status">
-          <TrendGraph :weather-data="weatherData" />
+          <TrendGraph
+            v-if="weatherData?.hourly.wind_speed_10m"
+            :hourly-data="weatherData.hourly.wind_speed_10m"
+          />
         </Card>
         <Card title="UV Index">
           <UvIndex :weather-data="weatherData" />
