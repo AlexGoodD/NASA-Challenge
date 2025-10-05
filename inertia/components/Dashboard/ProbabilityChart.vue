@@ -95,9 +95,9 @@ onMounted(() => {
 
 <template>
   <Card title="Probabilidad de lluvia">
-    <div class="overflow-x-hidden">
+    <div class="overflow-x-hidden pt-4">
       <div class="overflow-x-auto">
-        <div class="min-w-[1000px]">
+        <div class="min-w-[200px]">
           <canvas id="rainChart"></canvas>
         </div>
       </div>

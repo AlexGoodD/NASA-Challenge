@@ -56,12 +56,15 @@ export default class WeatherController {
         maxTemperature: apiData.daily[0].temp.max,
         minTemperature: apiData.daily[0].temp.min,
         precipitationProbability: apiData.daily[0].pop * 100,
+        dewPoint: apiData.daily[0].dew_point,
       },
       hourly: apiData.hourly.slice(0, 24).map((hour: any) => ({
         timestamp: new Date(hour.dt * 1000),
         temperature: hour.temp,
         precipitationProbability: hour.pop * 100,
         windSpeed: hour.wind_speed,
+        uvi: hour.uvi,
+        humidity: hour.humidity,
         weather: {
           main: hour.weather[0].main,
           icon: hour.weather[0].icon,
@@ -115,6 +118,7 @@ export interface DailyForecast {
   maxTemperature: number
   minTemperature: number
   precipitationProbability: number
+  dewPoint?: number
 }
 
 export interface HourlyForecast {
@@ -122,6 +126,8 @@ export interface HourlyForecast {
   temp: number
   precipitationProbability: number
   windSpeed: number
+  humidity: number
+  uvi: number
   weather: {
     main: string
     icon: string
