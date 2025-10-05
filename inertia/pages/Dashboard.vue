@@ -3,7 +3,6 @@ import Card from '~/components/UI/Card.vue'
 import ProbabilityChart from '~/components/Dashboard/ProbabilityChart.vue'
 import TrendGraph from '~/components/Dashboard/TrendGraph.vue'
 import WeatherCard from '~/components/Dashboard/WeatherCard.vue'
-import MapSelector from '~/components/Map/MapSelector.vue'
 import UvIndex from '~/components/Dashboard/UVIndex.vue'
 import Humidity from '~/components/Dashboard/Humidity.vue'
 import Visibility from '~/components/Dashboard/Visibility.vue'
@@ -13,9 +12,6 @@ import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
-import AiPredictor from '~/components/AiPredictor.vue'
-import { WeatherData } from '#controllers/WeatherController'
-import DatePicker from '~/components/DatePicker.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -186,11 +182,8 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
           :longitude="longitud"
           class="row-span-3 max-h-max"
         />
-        <Card title="Humedad">
-          <Humidity
-            :hourly-data="generateHourlyHumidityRecord(weatherData)"
-            :dew-point="weatherData.daily.dewPoint!"
-          />
+        <Card title="Humidity">
+          <Humidity :weather-data="weatherData" />
         </Card>
         <Card title="Visibilidad">
           <Visibility :visibility="weatherData.current.visibility / 1000" />
