@@ -172,9 +172,9 @@ function onLeave(el: any, done: any) {
       </div>
       <div
         v-else
-        class="text-neutral-500 text-2xl text-center font-semibold flex items-center h-full"
+        class="text-neutral-500 text-2xl text-center font-semibold flex items-center justify-center h-full"
       >
-        Obtén un análisis de viabilidad y recomendaciones para tus planes.
+        <p class="w-50">Obtén un análisis de viabilidad y recomendaciones para tus planes.</p>
       </div>
     </div>
 
