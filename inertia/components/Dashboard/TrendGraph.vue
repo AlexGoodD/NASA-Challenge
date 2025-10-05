@@ -96,16 +96,15 @@ watch(windData, (newData) => {
 <template>
   <div class="wind-status">
     <canvas ref="canvasRef"></canvas>
-    <div class="info">
+    <div class="flex justify-between mt-1">
       <span
         ><strong>{{ windData[selectedHour].toFixed(2) }}</strong> km/h</span
       >
-      <p>
-        <span>{{
-          selectedHour > 12 ? selectedHour - 12 : selectedHour === 0 ? 12 : selectedHour
-        }}</span
-        ><span>{{ selectedHour >= 12 ? 'PM' : 'AM' }}</span>
-      </p>
+
+      <span
+        >{{ selectedHour > 12 ? selectedHour - 12 : selectedHour === 0 ? 12 : selectedHour }}
+        {{ selectedHour >= 12 ? 'PM' : 'AM' }}
+      </span>
     </div>
   </div>
 </template>

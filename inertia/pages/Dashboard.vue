@@ -145,11 +145,11 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
 </script>
 
 <template>
-  <div class="dashboard overflow-hidden">
+  <div class="dashboard max-w-dvw">
     <header class="mb-10 mt-5 flex items-center justify-center">
       <AutocompletableSearch v-model="place" :initial-value="`${city}, ${country}`" :key="city" />
     </header>
-    <div class="grid grid-cols-4 gap-4 w-full :" v-if="isLoading">
+    <div class="grid grid-cols-4 gap-4 w-full" v-if="isLoading">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70 *:min-h-50">
         <Card class="col-span-2 h-72 animate-pulse bg-neutral-800/60" />
         <Card class="h-72 animate-pulse bg-neutral-800/60" />
@@ -163,7 +163,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
         <Card class="max-h-[82dvh] sticky top-3 h-full animate-pulse bg-neutral-800/60" />
       </div>
     </div>
-    <div class="grid grid-cols-4 gap-4" v-if="weatherData">
+    <div class="grid grid-cols-4 gap-4" v-else-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
         <WeatherCard class="col-span-2" :weather="weatherData" />
         <ProbabilityChart
