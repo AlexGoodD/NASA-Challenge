@@ -78,17 +78,17 @@ async function sendPredictionRequest() {
   try {
     isLoading.value = true
     prediction.value = null
-    const planToSend = userPlan.value.trim()
-    userPlan.value = ''
     const response = await predictViabilityEndpoint.get('', {
       params: {
         lat: props.place.location.latitude,
         lon: props.place.location.longitude,
-        userPlan: planToSend,
+        userPlan: userPlan.value,
         date: date.value,
         placeName: props.place.displayName.text,
       },
     })
+
+    userPlan.value = ''
 
     prediction.value = response.data as ResponseData
   } catch (error) {
@@ -186,6 +186,7 @@ function onLeave(el: any, done: any) {
       <CalendarComponent v-model="date" />
       <textarea
         class="py-2 px-3 bg-neutral-700 rounded-xl resize-none placeholder:text-neutral-400 focus:outline-none"
+        :class="{ 'animate-pulse ': isLoading || isGeneratingJustification }"
         rows="3"
         placeholder="¿Qué planes tienes?"
         v-model="userPlan"
