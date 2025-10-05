@@ -67,9 +67,9 @@ onMounted(() => {
           ticks: {
             stepSize: 50,
             callback: (value) => {
-              if (value === 100) return 'Luvioso'
-              if (value === 50) return 'Soleado'
-              if (value === 0) return 'Fuerte'
+              if (value === 100) return 'Alta'
+              if (value === 50) return 'Media'
+              if (value === 0) return 'Baja'
               return ''
             },
           },
@@ -95,7 +95,7 @@ onMounted(() => {
 
 <template>
   <Card title="Probabilidad de lluvia">
-    <div class="overflow-x-hidden">
+    <div class="overflow-x-hidden mt-4">
       <div class="overflow-x-auto">
         <div class="min-w-[1000px]">
           <canvas id="rainChart"></canvas>
