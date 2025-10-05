@@ -1,9 +1,18 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Chart } from 'chart.js/auto'
 
-const value = 5.5 // valor actual de UV
-const maxValue = 12 // máximo del índice UV
+const value = ref<number | null>(null) // valor actual de UV
+const maxValue = ref<number | null>(null) // máximo del índice UV
+
+interface Props {
+  dailyData: {
+    uv_index_max: Record<number, number>
+    uv_index_clear_sky_max: Record<number, number>
+  }
+}
+
+const props = defineProps<Props>()
 
 onMounted(() => {
   const canvas = document.getElementById('uvChart') as HTMLCanvasElement | null
@@ -11,13 +20,18 @@ onMounted(() => {
 
   const ctx = canvas.getContext('2d')
   if (!ctx) return
+  value.value = props.dailyData.uv_index_max[0] || 0
+  maxValue.value = props.dailyData.uv_index_clear_sky_max[0] || 0 // Valor máximo típico para el índice UV
+  if (!maxValue.value || !value.value) {
+    return
+  }
 
   new Chart(ctx, {
     type: 'doughnut',
     data: {
       datasets: [
         {
-          data: [value, maxValue - value],
+          data: [value.value, maxValue.value - value.value],
           backgroundColor: ['#2BA3FC', '#D3EEFE'],
           borderWidth: 0,
         },
@@ -40,7 +54,7 @@ onMounted(() => {
 <template>
   <div class="uv-index">
     <canvas id="uvChart"></canvas>
-    <div class="text-2xl font-bold">5.50 UV</div>
+    <div class="text-2xl font-bold">{{ value?.toFixed(2) }} UV</div>
   </div>
 </template>
 

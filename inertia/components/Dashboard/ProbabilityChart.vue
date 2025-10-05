@@ -9,16 +9,6 @@ interface Props {
 
 const props = defineProps<Props>()
 
-function generateHourlyLabels() {
-  const labels = []
-  for (let i = 0; i < 24; i++) {
-    const hour = i === 0 ? 12 : i > 12 ? i - 12 : i
-    const period = i < 12 ? 'AM' : 'PM'
-    labels.push(`${hour}${period}`)
-  }
-  return labels
-}
-
 const chartData = computed(() => {
   const data = []
   for (let i = 0; i < 24; i++) {
@@ -95,7 +85,7 @@ onMounted(() => {
 
 <template>
   <Card title="Probabilidad de lluvia">
-    <div class="overflow-x-hidden mt-4">
+    <div class="overflow-x-hidden">
       <div class="overflow-x-auto">
         <div class="min-w-[1000px]">
           <canvas id="rainChart"></canvas>

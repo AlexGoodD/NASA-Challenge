@@ -15,6 +15,7 @@ import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
 import AiPredictor from '~/components/AiPredictor.vue'
 import { WeatherData } from '#controllers/WeatherController'
+import DatePicker from '~/components/DatePicker.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -22,6 +23,9 @@ const longitud = ref<number | null>(null)
 const weatherData = ref<WeatherData>()
 const locationPermissionGranted = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
+
+const city = ref<string>('Cargando...')
+const country = ref<string>('')
 
 const fetchWeatherData = async (lat: number, lon: number) => {
   try {
@@ -328,8 +332,16 @@ function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
 
 <template>
   <div class="dashboard">
-    <header class="mb-10 mt-5 flex justify-center">
+    <header class="mb-10 mt-5 flex items-center justify-between">
+      <div class="flex gap-2 items-center">
+        <MapPin :size="20" />
+        <!--Ciudad/Pais-->
+        <p>{{ city }}, {{ country }}</p>
+      </div>
       <AutocompletableSearch v-model="place" />
+      <div class="flex gap-2">
+        <DatePicker />
+      </div>
     </header>
     <div class="grid grid-cols-4 gap-4" v-if="weatherData">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
@@ -340,10 +352,19 @@ function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
         />
         <Card v-else />
         <Card title="Wind Status">
-          <TrendGraph :weather-data="weatherData" />
+          <TrendGraph
+            v-if="weatherData?.hourly.wind_speed_10m"
+            :hourly-data="weatherData.hourly.wind_speed_10m"
+          />
         </Card>
-        <Card title="UV Index">
-          <UvIndex :weather-data="weatherData" />
+        <Card title="UV Index" class="min-h-[221px]">
+          <UvIndex
+            v-if="weatherData?.daily.uv_index_clear_sky_max && weatherData?.daily.uv_index_max"
+            :daily-data="{
+              uv_index_max: weatherData.daily.uv_index_max,
+              uv_index_clear_sky_max: weatherData.daily.uv_index_clear_sky_max,
+            }"
+          />
         </Card>
         <MapSelector
           :place-name="place?.displayName?.text || 'Ubicación actual'"
@@ -352,7 +373,10 @@ function getHourlyPrecipitationProbabilityRecord(): Record<number, number> {
           class="row-span-3 max-h-max"
         />
         <Card title="Humidity">
-          <Humidity :weather-data="weatherData" />
+          <Humidity
+            :hourly-data="weatherData?.hourly.relative_humidity_2m"
+            :dew-point="weatherData?.hourly.dew_point_2m?.[0]"
+          />
         </Card>
         <Card title="Visibility">
           <Visibility :weather-data="weatherData" />
