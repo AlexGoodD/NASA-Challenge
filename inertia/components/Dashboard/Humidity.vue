@@ -2,11 +2,12 @@
 
 <template>
   <div class="flex flex-col items-center text-white space-y-2">
-    <CloudDrizzle class="w-[6rem] h-[6rem] text-[#C3DBEE]" />
-    <div class="flex justify-between w-full text-medium mt-2">
-      <h2><span class="font-bold">84</span> %</h2>
+    <CloudDrizzle class="text-[#C3DBEE]" :size="100" />
+
+    <div class="text-center">
+      <h2 class="text-2xl font-bold">84 %</h2>
       <div class="flex items-center space-x-2 text-sm text-gray-400">
-        <Droplets class="w-4 h-4" />
+        <Droplets />
         <p>The dew point is 27 right now</p>
       </div>
     </div>

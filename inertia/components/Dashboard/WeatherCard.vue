@@ -5,9 +5,9 @@ import Card from '~/components/UI/Card.vue'
 <template>
   <Card class="bg-[#C3DBEE] text-[#1C1C1C] px-4 py-3 rounded-lg shadow-md">
     <div class="top flex justify-between items-center">
-      <div class="flex items-center justify-between">
-        <h2 class="text-[2.8rem] font-semibold leading-none text-[#1C1C1C]">16°</h2>
-        <img src="" alt="Sunny" class="w-16 h-16 object-contain" />
+      <div class="flex w-full items-center justify-between pt-4">
+        <h2 class="text-[2.8rem] font-semibold leading-none text-[#1C1C1C] pb-2">16°</h2>
+        <i class="wi wi-day-cloudy text-[2.8rem] text-black"></i>
       </div>
     </div>
 
