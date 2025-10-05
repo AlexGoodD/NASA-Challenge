@@ -3,7 +3,6 @@ import Card from '~/components/UI/Card.vue'
 import ProbabilityChart from '~/components/Dashboard/ProbabilityChart.vue'
 import TrendGraph from '~/components/Dashboard/TrendGraph.vue'
 import WeatherCard from '~/components/Dashboard/WeatherCard.vue'
-import MapSelector from '~/components/Map/MapSelector.vue'
 import UvIndex from '~/components/Dashboard/UVIndex.vue'
 import Humidity from '~/components/Dashboard/Humidity.vue'
 import Visibility from '~/components/Dashboard/Visibility.vue'
@@ -13,6 +12,7 @@ import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
+import NasaMap from '~/components/Map/NasaMap.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -118,12 +118,7 @@ onMounted(() => {
         <Card title="UV Index">
           <UvIndex :weather-data="weatherData" />
         </Card>
-        <MapSelector
-          :place-name="place?.displayName?.text || 'Ubicación actual'"
-          :latitude="latitud"
-          :longitude="longitud"
-          class="row-span-3 max-h-max"
-        />
+        <NasaMap class="row-span-3 max-h-max" />
         <Card title="Humidity">
           <Humidity :weather-data="weatherData" />
         </Card>
