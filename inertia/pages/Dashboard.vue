@@ -13,6 +13,7 @@ import { PlacesApiResponse } from '../../services/GoogleMapsService'
 import axios from 'axios'
 import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
+import DatePicker from '~/components/DatePicker.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -20,6 +21,9 @@ const longitud = ref<number | null>(null)
 const weatherData = ref<any>(null)
 const locationPermissionGranted = ref<boolean>(false)
 const isLoading = ref<boolean>(false)
+
+const city = ref<string>('Cargando...')
+const country = ref<string>('')
 
 const fetchWeatherData = async (lat: number, lon: number) => {
   try {
@@ -54,9 +58,13 @@ async function getAproximateLocationByIP() {
       throw new Error('Could not retrieve IP address')
     }
     const response = await axios.get(`https://ipapi.co/${ip}/json/`)
-    const { latitude, longitude } = response.data
+    const { latitude, longitude, city: cityName, country_name } = response.data
+
     latitud.value = latitude
     longitud.value = longitude
+    city.value = cityName
+    country.value = country_name
+
     await fetchWeatherData(latitude, longitude)
   } catch (error) {
     console.error('Error fetching approximate location by IP:', error)
@@ -73,6 +81,11 @@ function requestLocationPermission() {
       latitud.value = position.coords.latitude
       longitud.value = position.coords.longitude
       locationPermissionGranted.value = true
+      const response = await axios.get(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=es`
+      )
+      city.value = response.data.city || response.data.locality
+      country.value = response.data.countryName
       await fetchWeatherData(position.coords.latitude, position.coords.longitude)
     },
     async (error: GeolocationPositionError) => {
@@ -105,8 +118,16 @@ onMounted(() => {
 
 <template>
   <div class="dashboard">
-    <header class="mb-10 mt-5 flex justify-center">
+    <header class="mb-10 mt-5 flex items-center justify-between">
+      <div class="flex gap-2">
+        <MapPin :size="20" />
+        <!--Ciudad/Pais-->
+        <p>{{ city }}, {{ country }}</p>
+      </div>
       <AutocompletableSearch v-model="place" />
+      <div class="flex gap-2">
+        <DatePicker />
+      </div>
     </header>
     <div class="grid grid-cols-4 gap-4">
       <div class="grid col-span-3 grid-cols-3 gap-4 *:max-h-70">
