@@ -14,6 +14,7 @@ import Pressure from '~/components/Dashboard/Pressure.vue'
 import HeatIndex from '~/components/Dashboard/HeatIndex.vue'
 import { WeatherData } from '#controllers/WeatherController'
 import NasaMap from '~/components/Map/NasaMap.vue'
+import AiPredictor from '~/components/AiPredictor.vue'
 
 const place = ref<PlacesApiResponse['places'][number]>()
 const latitud = ref<number | null>(null)
@@ -179,7 +180,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
           />
         </Card>
         <NasaMap
-          :place-name="place?.displayName?.text || 'Ubicación actual'"
+          :place-name="place?.displayName.text ?? 'Ubicacion actual'"
           :lat="latitud"
           :lon="longitud"
           :date="new Date('2024-10-04')"

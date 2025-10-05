@@ -6,6 +6,7 @@ interface Props {
   lat: number
   lon: number
   date: Date
+  placeName: string
 }
 
 const props = defineProps<Props>()
@@ -16,7 +17,6 @@ mapboxgl.accessToken =
   'pk.eyJ1IjoiZmhlcjAzMTEiLCJhIjoiY21nZDhlZGRrMGNrbTJpcHpyZWdmYmVocyJ9.HWzBxg1lABSKNG25BXmpXA'
 
 function refreshMap(currentMap: Map | null) {
-  console.log(currentMap)
   if (!currentMap) return
   currentMap.on('load', () => {
     const formatDate = props.date.toISOString().split('T')[0]
@@ -55,13 +55,19 @@ function createMap() {
     })
   }
 }
-watch(
-  () => props.lat || props.lon || props.date,
-  () => {
+watch(props, () => {
+  if ((props.lat || props.lon) && !props.placeName) {
     createMap()
     refreshMap(map)
   }
-)
+  if (props.placeName) {
+    map?.flyTo({
+      center: [props.lon, props.lat],
+      speed: 1.5,
+    })
+    console.log(props.placeName)
+  }
+})
 onMounted(() => {
   if (!props.lon || !props.lat) return
   createMap()
