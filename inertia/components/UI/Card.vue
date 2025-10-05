@@ -14,7 +14,7 @@ defineProps<{
       square && 'aspect-square h-auto',
     ]"
   >
-    <header v-if="title" class="mb-2 text-lg font-thin">
+    <header v-if="title" class="text-xs font-bold mb-4 uppercase -mt-1">
       {{ title }}
     </header>
     <div class="flex-1">

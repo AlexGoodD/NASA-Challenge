@@ -1,78 +1,80 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { getWeatherValidator, predictWeatherViabilityValidator } from '#validators/weather'
-import { fetchWeatherApi } from 'openmeteo'
 import GeminiService from '../../services/GeminiService.js'
 import {getFutureForecast} from '../../services/Predictor.js'
 import env from '#start/env'
 
 export default class WeatherController {
   public async index({ inertia, request }: HttpContext) {
-    const payload = request.validateUsing(getWeatherValidator)
+    const payload = await request.validateUsing(getWeatherValidator)
     const weatherInformation = {}
 
     return inertia.render('Dashboard')
   }
 
-  public async search({ request }: HttpContext) {
+  private readonly apiKey: string = env.get('OPEN_WEATHER_API_KEY') ?? ""
+  private readonly weatherApiBaseUrl = 'https://api.openweathermap.org/data/3.0/onecall'
+
+  public async search({ request, response }: HttpContext) {
     const { latitude, longitude } = request.body()
-    console.log(latitude, longitude)
-    const params = {
-      latitude: Number(latitude),
-      longitude: Number(longitude),
-      daily: [
-        'weather_code',
-        'temperature_2m_max',
-        'temperature_2m_min',
-        'precipitation_probability_max',
-        'wind_speed_10m_max',
-      ],
-      hourly: [
-        'temperature_2m',
-        'wind_speed_10m',
-        'relative_humidity_2m',
-        'precipitation_probability',
-        'apparent_temperature',
-        'dew_point_2m',
-      ],
-      timezone: 'America/Chicago',
-      forecast_days: 1,
+
+    const params = new URLSearchParams({
+      lat: latitude,
+      lon: longitude,
+      appid: this.apiKey,
+      units: 'metric',
+    })
+
+    const owResponse = await fetch(`${this.weatherApiBaseUrl}?${params}`)
+    if (!owResponse.ok) {
+      console.log(owResponse)
+      console.error('Failed to fetch weather data:', owResponse.statusText)
+      return response.status(owResponse.status).json({ error: 'Failed to fetch weather data' })
     }
 
-    const url = 'https://api.open-meteo.com/v1/forecast'
-    const responses = await fetchWeatherApi(url, params)
-    const response = responses[0]
+    const apiData = (await owResponse.json()) as any
 
-    const hourly = response.hourly()!
-    const daily = response.daily()!
-    const utcOffsetSeconds = response.utcOffsetSeconds()
-
-    const weatherData = {
-      hourly: {
-        time: [
-          ...Array((Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval()),
-        ].map(
-          (_, i) =>
-            new Date((Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) * 1000)
-        ),
-        temperature_2m: hourly.variables(0)!.valuesArray(),
-        wind_speed_10m: hourly.variables(1)!.valuesArray(),
-        relative_humidity_2m: hourly.variables(2)!.valuesArray(),
-        precipitation_probability: hourly.variables(3)!.valuesArray(),
-        apparent_temperature: hourly.variables(4)!.valuesArray(),
-        dew_point_2m: hourly.variables(5)!.valuesArray(),
+    // Transform API data into our clean structure
+    const weatherData: WeatherData = {
+      current: {
+        timestamp: new Date(apiData.current.dt * 1000),
+        temperature: apiData.current.temp,
+        feelsLike: apiData.current.feels_like,
+        pressure: apiData.current.pressure,
+        humidity: apiData.current.humidity,
+        uvi: apiData.current.uvi,
+        visibility: apiData.current.visibility,
+        windSpeed: apiData.current.wind_speed,
+        weather: {
+          main: apiData.current.weather[0].main,
+          description: apiData.current.weather[0].description,
+          icon: apiData.current.weather[0].icon,
+        },
       },
       daily: {
-        time: [...Array((Number(daily.timeEnd()) - Number(daily.time())) / daily.interval())].map(
-          (_, i) =>
-            new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000)
-        ),
-        weather_code: daily.variables(0)!.valuesArray(),
-        temperature_2m_max: daily.variables(1)!.valuesArray(),
-        temperature_2m_min: daily.variables(2)!.valuesArray(),
-        precipitation_probability_max: daily.variables(3)!.valuesArray(),
-        wind_speed_10m_max: daily.variables(4)!.valuesArray(),
+        date: new Date(apiData.daily[0].dt * 1000),
+        sunrise: new Date(apiData.daily[0].sunrise * 1000),
+        sunset: new Date(apiData.daily[0].sunset * 1000),
+        summary: apiData.daily[0].summary,
+        maxTemperature: apiData.daily[0].temp.max,
+        minTemperature: apiData.daily[0].temp.min,
+        precipitationProbability: apiData.daily[0].pop * 100,
+        dewPoint: apiData.daily[0].dew_point,
       },
+      hourly: apiData.hourly.slice(0, 24).map((hour: any) => ({
+        timestamp: new Date(hour.dt * 1000),
+        temperature: hour.temp,
+        precipitationProbability: hour.pop * 100,
+        windSpeed: hour.wind_speed,
+        uvi: hour.uvi,
+        humidity: hour.humidity,
+        weather: {
+          main: hour.weather[0].main,
+          icon: hour.weather[0].icon,
+        },
+      })),
     }
+
 
     return weatherData
   }
@@ -112,5 +114,51 @@ export default class WeatherController {
     } catch(error){
       console.log(error)
     }
+  }
+}
+
+export interface WeatherData {
+  current: CurrentWeather
+  daily: DailyForecast // Only today's forecast
+  hourly: HourlyForecast[] // Next 24 hours
+}
+
+export interface CurrentWeather {
+  timestamp: Date
+  temperature: number
+  feelsLike: number
+  pressure: number
+  humidity: number
+  uvi: number
+  visibility: number
+  windSpeed: number
+  weather: {
+    main: string
+    description: string
+    icon: string
+  }
+}
+
+export interface DailyForecast {
+  date: Date
+  sunrise: Date
+  sunset: Date
+  summary: string
+  maxTemperature: number
+  minTemperature: number
+  precipitationProbability: number
+  dewPoint?: number
+}
+
+export interface HourlyForecast {
+  timestamp: Date
+  temp: number
+  precipitationProbability: number
+  windSpeed: number
+  humidity: number
+  uvi: number
+  weather: {
+    main: string
+    icon: string
   }
 }

@@ -74,7 +74,7 @@ function updateModel(value: any) {
   <div class="relative">
     <div class="relative">
       <input
-        class="h-10 bg-neutral-800 rounded-lg focus:outline-none p-2 px-3 w-96 placeholder:text-neutral-400 shadow-xl shadow-sky-300/5"
+        class="bg-neutral-800 rounded-full focus:outline-none py-3 px-4 w-120 placeholder:text-neutral-400 shadow-xl shadow-sky-300/5"
         placeholder="¿A dónde quieres ir?"
         type="text"
         name="place"
@@ -83,14 +83,14 @@ function updateModel(value: any) {
         v-bind="$attrs"
       />
       <button
-        class="absolute right-1 inset-y-1 p-1 bg-neutral-700 rounded-[0.35rem] aspect-square flex items-center justify-center hover:bg-neutral-600 active:scale-[.97] transition-all"
+        class="absolute right-1 inset-y-1 p-1 bg-neutral-700 rounded-full aspect-square flex items-center justify-center hover:bg-neutral-600 active:scale-[.97] transition-all"
       >
         <Search :size="20" class="stroke-neutral-400" />
       </button>
     </div>
     <div
       ref="dropdown"
-      class="absolute top-12 inset-x-0 rounded-lg bg-neutral-800 shadow-xl shadow-white/5 z-50 overflow-hidden"
+      class="absolute top-14 inset-x-0 rounded-lg bg-neutral-800 shadow-xl shadow-white/5 z-50 overflow-hidden"
       v-if="isActive"
     >
       <ul v-if="results.length" class="grid">
@@ -100,7 +100,7 @@ function updateModel(value: any) {
           @mousedown="!isLoading ? updateModel(result) : null"
         >
           <div class="grid">
-            <span class="leading-tight text-sm uppercase">{{ result.displayName.text }}</span>
+            <span class="leading-tight text-sm">{{ result.displayName.text }}</span>
             <span class="text-sm line-clamp-1 text-stone-400">
               {{ result.formattedAddress }}
             </span>

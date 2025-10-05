@@ -2,8 +2,12 @@
 import { onMounted } from 'vue'
 import { Chart } from 'chart.js/auto'
 
-const value = 5.5 // valor actual de UV
-const maxValue = 12 // máximo del índice UV
+interface Props {
+  uvIndex: number
+  maxUvIndex: number
+}
+
+const props = defineProps<Props>()
 
 onMounted(() => {
   const canvas = document.getElementById('uvChart') as HTMLCanvasElement | null
@@ -17,7 +21,7 @@ onMounted(() => {
     data: {
       datasets: [
         {
-          data: [value, maxValue - value],
+          data: [props.uvIndex, props.maxUvIndex - props.uvIndex],
           backgroundColor: ['#2BA3FC', '#D3EEFE'],
           borderWidth: 0,
         },
@@ -40,7 +44,7 @@ onMounted(() => {
 <template>
   <div class="uv-index">
     <canvas id="uvChart"></canvas>
-    <div class="uv-value"><strong>5.50</strong> UV</div>
+    <div class="text-2xl font-bold">{{ uvIndex?.toFixed(2) }} UV</div>
   </div>
 </template>
 
@@ -52,10 +56,5 @@ onMounted(() => {
 }
 canvas {
   max-height: 120px;
-}
-.uv-value {
-  margin-top: -10px;
-  font-size: 1rem;
-  font-weight: 600;
 }
 </style>

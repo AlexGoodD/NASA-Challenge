@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios'
-import { Send } from 'lucide-vue-next'
+import { ArrowUp, LoaderCircle } from 'lucide-vue-next'
 import { ref, watch } from 'vue'
 import { gsap } from 'gsap'
 import { Place } from '../../services/GoogleMapsService';
@@ -25,19 +25,12 @@ type ResponseData = {
   recommendations: string[]
 }
 
-const prediction = ref<ResponseData | null>({
-  score: 95,
-  justification:
-    'Las condiciones meteorológicas son casi ideales para andar en bicicleta. La temperatura es muy agradable (22°C), la humedad es moderada (60%) y la velocidad del viento es ligera (10 km/h), lo que lo hace cómodo para actividades al aire libre. La visibilidad es excelente.',
-  recommendations: [
-    'Aplica protector solar debido al índice UV moderado (5).',
-    'Mantente hidratado durante tu actividad física.',
-    'Viste ropa adecuada para ciclismo para mayor comodidad.',
-    'Verifica el estado de tu bicicleta antes de iniciar el recorrido.',
-  ],
-})
+const prediction = ref<ResponseData | null>()
 
 const isGeneratingJustification = ref(false)
+const isLoading = ref(false)
+
+const _score = ref(0)
 const _justification = ref('')
 const _recommendations = ref<string[]>([])
 
@@ -46,14 +39,26 @@ watch(
   (newPrediction) => {
     if (newPrediction) {
       isGeneratingJustification.value = true
+
+      _score.value = Math.max(newPrediction.score - 30, 0)
       _justification.value = ''
+      _recommendations.value = []
+
       let index = 0
-      const interval = setInterval(() => {
+
+      const scoreInterval = setInterval(() => {
+        if (_score.value < newPrediction.score) {
+          _score.value++
+        } else {
+          clearInterval(scoreInterval)
+        }
+      }, 20)
+      const justificationInterval = setInterval(() => {
         if (index < newPrediction.justification.length) {
           _justification.value += newPrediction.justification[index]
           index++
         } else {
-          clearInterval(interval)
+          clearInterval(justificationInterval)
         }
       }, 10)
       setTimeout(
@@ -70,6 +75,10 @@ watch(
 
 async function sendPredictionRequest() {
   try {
+    isLoading.value = true
+    prediction.value = null
+    const planToSend = userPlan.value.trim()
+    userPlan.value = ''
     const response = await predictViabilityEndpoint.get('', {
       params: {
         lat: props.place.location.latitude,
@@ -81,9 +90,12 @@ async function sendPredictionRequest() {
     })
 
     prediction.value = response.data as ResponseData
+
     console.log('Predicción recibida:', prediction.value)
   } catch (error) {
     console.error('Error al enviar la solicitud de predicción:', error)
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -96,7 +108,7 @@ function onEnter(el: any, done: any) {
   gsap.to(el, {
     opacity: 1,
     height: 'auto',
-    delay: el.dataset.index * 0.2,
+    delay: el.dataset.index * 100,
     onComplete: done,
   })
 }
@@ -105,15 +117,15 @@ function onLeave(el: any, done: any) {
   gsap.to(el, {
     opacity: 0,
     height: 0,
-    delay: el.dataset.index * 0.2,
+    delay: el.dataset.index * 100,
     onComplete: done,
   })
 }
 </script>
 
 <template>
-  <div class="flex justify-end flex-col h-[82dvh] w-full">
-    <div class="w-full w-full h-full">
+  <div class="flex flex-col h-[82dvh] w-full -mt-4">
+    <div class="flex-1 overflow-y-auto pr-3 pt-3 -mx-4 px-4 pb-5">
       <div v-if="prediction" class="flex flex-col *:py-2">
         <div class="!pt-0 flex flex-col">
           <span> Puntaje de viabilidad </span>
@@ -125,7 +137,7 @@ function onLeave(el: any, done: any) {
               'text-red-500': prediction.score < 40,
             }"
           >
-            {{ prediction.score }}%
+            {{ _score }}%
           </span>
         </div>
         <div>
@@ -136,7 +148,7 @@ function onLeave(el: any, done: any) {
             Algunas recomendaciones
           </h3>
           <TransitionGroup
-            tag="ul"
+            tag="div"
             :css="false"
             @before-enter="onBeforeEnter"
             @enter="onEnter"
@@ -152,19 +164,31 @@ function onLeave(el: any, done: any) {
           </TransitionGroup>
         </div>
       </div>
+
+      <div v-else-if="isLoading" class="flex flex-col items-center justify-center h-full gap-4">
+        <LoaderCircle :size="48" class="stroke-neutral-500 animate-[spin_0.75s_infinite]" />
+      </div>
+      <div v-else class="text-neutral-500 text-3xl font-semibold flex items-center h-full">
+        Obtén un análisis de viabilidad y recomendaciones para tus planes.
+      </div>
     </div>
-    <button
-      class="mb-2 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold p-2 rounded-md transition-colors w-fit self-end disabled:opacity-50 disabled:cursor-not-allowed"
-      @click="sendPredictionRequest"
-      :disabled="!userPlan"
-    >
-      <Send :size="16" />
-    </button>
-    <textarea
-      class="py-2 px-3 bg-neutral-700 rounded-md resize-none placeholder:text-neutral-400 focus:outline-none"
-      rows="3"
-      placeholder="¿Qué planes tienes?"
-      v-model="userPlan"
-    ></textarea>
+
+    <div class="flex flex-col relative z-10 -mx-4 -mb-4">
+      <button
+        class="mb-2 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold p-1 rounded-md transition-colors w-fit self-end disabled:opacity-0 disabled:cursor-not-allowed absolute -top-10 right-3"
+        @click="sendPredictionRequest"
+        :disabled="!userPlan"
+      >
+        <ArrowUp :size="24" />
+      </button>
+      <textarea
+        class="py-2 px-3 bg-neutral-700 rounded-xl resize-none placeholder:text-neutral-400 focus:outline-none"
+        rows="3"
+        placeholder="¿Qué planes tienes?"
+        v-model="userPlan"
+        @keydown.enter.prevent="sendPredictionRequest"
+        :disabled="isLoading || isGeneratingJustification"
+      ></textarea>
+    </div>
   </div>
 </template>
