@@ -184,7 +184,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
           :lat="latitud"
           :lon="longitud"
           :date="new Date('2024-10-04')"
-          class="row-span-3"
+          class="row-span-3 rounded-xl"
         />
         <Card title="Humidity">
           <Humidity
