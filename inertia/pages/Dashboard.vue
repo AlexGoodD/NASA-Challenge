@@ -62,6 +62,7 @@ async function getApproximateLocation() {
 
 function requestLocationPermission() {
   if (!navigator.geolocation) {
+    getApproximateLocation()
     return
   }
 
@@ -71,7 +72,6 @@ function requestLocationPermission() {
     longitud.value = longitude
     locationPermissionGranted.value = true
 
-    // Obtener ciudad y país usando BigDataCloud (API gratuita)
     try {
       const geoResponse = await axios.get(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=es`
@@ -147,8 +147,8 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
 <template>
   <div class="dashboard">
     <header class="mb-10 mt-5 flex items-center justify-between">
-      <div class="flex gap-2 items-center">
-        <MapPin :size="20" />
+      <div class="flex gap-2 items-center ml-4">
+        <MapPin :size="16" />
         <p>{{ city }}, {{ country }}</p>
       </div>
       <div class="flex gap-4">
@@ -203,7 +203,7 @@ function getMaxValue(data: Record<string, any>[], key: string): number {
       </div>
 
       <div class="right">
-        <Card class="max-h-[82dvh] sticky top-0">
+        <Card class="max-h-[82dvh] sticky top-3">
           <AiPredictor :place="place!" />
         </Card>
       </div>
