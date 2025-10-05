@@ -118,7 +118,7 @@ export interface DailyForecast {
   maxTemperature: number
   minTemperature: number
   precipitationProbability: number
-  dewPoint?: number
+  dewPoint: number
 }
 
 export interface HourlyForecast {

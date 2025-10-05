@@ -27,7 +27,6 @@ const weatherStyle = computed(() => {
     <div class="text-center">
       <h2 class="text-2xl font-bold">{{ props.hourlyData?.[0] ?? '--' }} %</h2>
       <div class="flex items-center space-x-2 text-sm text-gray-400">
-        <Droplets :size="16" />
         <p>El punto de rocío es de {{ props.dewPoint }}°C</p>
       </div>
     </div>

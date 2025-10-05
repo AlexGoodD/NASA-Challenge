@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const pressureData = ref([1012, 1013, 1014, 1013, 1015, 1014, 1016])
+defineProps<{
+  pressure: number
+}>()
 </script>
 
 <template>
@@ -9,8 +9,8 @@ const pressureData = ref([1012, 1013, 1014, 1013, 1015, 1014, 1016])
     <Gauge class="text-gray-300" :size="100" />
 
     <div class="text-center">
-      <h2 class="text-2xl font-bold">{{ pressureData[pressureData.length - 1] }} hPa</h2>
-      <p class="text-gray-400 text-sm">Pressure trend (last few minutes)</p>
+      <h2 class="text-2xl font-bold">{{ pressure }} hPa</h2>
+      <p class="text-gray-400 text-sm">Tendencia de presión</p>
     </div>
   </div>
 </template>
